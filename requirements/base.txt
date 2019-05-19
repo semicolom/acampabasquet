@@ -1,0 +1,16 @@
+django
+
+# PostgreSQL - Python
+psycopg2
+
+# A better shell
+django-extensions
+bpython
+
+# Manage enviroment variables
+django-environ  # https://github.com/joke2k/django-environ
+
+# Store images on AWS S3
+pillow
+boto3
+django-storages
