@@ -60,16 +60,10 @@ Objectiu:
 
 Coses a tenir en compte
 - Cada equip pertany a una categoria
-- Un equpip no ha d'estar molt de temps sense jugar ni jugar molt seguit
+- Un equpip no ha d'estar molt de temps sense jugar ni jugar molt seguit. Jugar cada 1h:30 2h
 
-Preguntes
-- Acces domini esporlesbc.com o un de nou?
-- Quines categories hi haura?
-- Quin tipo de competició jugaran? Lliga, cuadro de cruces, ...?
-- Si un equipo se retira / no presenta, que feim?
-- Hem de dir a quina pista se juga es partit? Quantes pistes hi haurà? Estaran sempre disponibles?
-- Hem de calcular quan dura un partit i a quina hora juga cada partit?
-- Poden jugar qualsevol categoria a qualsevol hora? Per exemple, minis a les 4 de sa matinada?
+Domini
+- Acces domini esporlesbc.com o un de nou? Domini nou: acampabasquetebc.com
 
 - Que ha de veure organització i quines accions podrà fer?
     > Seguents partits (quan i on)
@@ -77,7 +71,7 @@ Preguntes
     > Resultats
     > Introduir resultat d'un partit
     > Poder crear un equip
-    > Poder crear categories
+    > Poder crear categories (ja ho faig jo)
 - Que han de veure es jugadors?
     > Seguents partits (quan i on)
     > Classificació
@@ -100,4 +94,23 @@ Models
     > Equips (M2M) ordenats
 - Time slot
     > Hora inici
-    > Hora fi
+
+
+### Funcionament
+Se jugarà una competició 3x3 de basket per categories amb una durada màxima de 24h (nomrmalment unes 16h).
+
+Es partits son de 12 minuts i se juguen dedins un slot de 15 minuts. La competició comença a les 19:00.
+
+Hi ha 3 pistes disponibles però depen des volum d'equips se juga només en 2 pistes. Ses finals de cada categoria se juguen a sa pista central, però pot ser que se juguin dues finals alhora. Les semifinals es juguen a pista lateral.
+
+Cada equip pertany a una categoria. Hi ha 3 categories: Infantil, Cadet i Absoluta. Per cada categoria es equips poden ser masculí o femení. Si hi ha equips mixtes es colocaran a altres categories. Si a una categoria hi ha pocs equips s'ajuntaran masculina i femenina.
+
+Cada categoria jugarà una competició en modo lliga (veure quadres FBIB). Si hi ha categories molt grans, per exemple de 12, intentar dividir-les en 2 subcategories de 6 equips.
+
+Si una categoria té 2 subcategories, se disputarà una final 1r contra 1r i una semi 2n contra 2n.
+Si una categoria no te subcategories, se disuputaran 2 semis, 1r contra 4t i 2n contra 3r. Es guanyadors disputaran sa final. (Pendent de Aina)
+Si una categoria es mixta (hi ha equips masculins i femenins), se disputara una final entre es dos millors classificats masculins i es dos millors classificats femenins.
+
+La categoria Infantil no pot jugar partits entre les 02:00 i les 07:00. Si no es pot emplenar tot el quadre amb els equips que hi ha, deixar forats buids per possibles canvis.
+
+Si un equip no se presenta, marcar partit com 23 a 0 a favor del equip presentat.
