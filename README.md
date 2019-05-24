@@ -16,10 +16,10 @@ Create a PostgreSQL database
 ```
 sudo su - postgres
 psql
-CREATE DATABASE 24hours;
-CREATE USER 24hours WITH PASSWORD '24hours';
-GRANT ALL PRIVILEGES ON DATABASE 24hours TO 24hours;
-ALTER USER 24hours CREATEDB;
+CREATE DATABASE "24hours";
+CREATE USER twentyfourhours WITH PASSWORD "24hours";
+GRANT ALL PRIVILEGES ON DATABASE "24hours" TO twentyfourhours;
+ALTER USER twentyfourhours CREATEDB;
 ```
 
 Then run:

@@ -81,7 +81,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': '24hours',
-        'USER': env('DJANGO_DATABASE_DEFAULT_USER', default='24hours'),
+        'USER': env('DJANGO_DATABASE_DEFAULT_USER', default='twentyfourhours'),
         'PASSWORD': env(
             'DJANGO_DATABASE_DEFAULT_PASSWORD',
             default='24hours'
