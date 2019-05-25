@@ -2,8 +2,12 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 
+admin.site.site_header = "Acampabàsquet"
+admin.site.site_title = "Acampabàsquet"
+admin.site.index_title = ''
+
 urlpatterns = [
-    path('{}'.format(settings.ADMIN_URL), admin.site.urls),
+    path('{}/'.format(settings.ADMIN_URL), admin.site.urls),
 ]
 
 # On development serve media and static files using django

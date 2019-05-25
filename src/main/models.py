@@ -6,26 +6,33 @@ AGES = [
     ('abs', "Absoluta"),
 ]
 SEXES = [
-    ('masc', "Masculí"),
-    ('fem', "Femení"),
-    ('mix', "Mixte"),
+    ('masc', "Masculina"),
+    ('fem', "Femenina"),
+    ('mix', "Mixta"),
 ]
 
 
-class Category(models.Model):
-    age = models.CharField("Edat", choices=AGES, max_length=255)
-    sex = models.CharField("Sexe", choices=SEXES, max_length=255)
+class Group(models.Model):
+    name = models.CharField("Nom", max_length=255)
+    category = models.CharField("Categoria", choices=AGES, max_length=255)
+    modality = models.CharField("Modalitat", choices=SEXES, max_length=255)
+
+    class Meta:
+        verbose_name = "Grup"
+
+    def __str__(self):
+        return self.name
 
 
 class Team(models.Model):
     name = models.CharField("Nom", max_length=255)
 
-    age = models.CharField("Edat", choices=AGES, max_length=255)
-    sex = models.CharField("Sexe", choices=SEXES, max_length=255)
+    category = models.CharField("Categoria", choices=AGES, max_length=255)
+    modality = models.CharField("Modalitat", choices=SEXES, max_length=255)
 
-    category = models.ForeignKey(
-        Category,
-        verbose_name="Categoria",
+    group = models.ForeignKey(
+        Group,
+        verbose_name="Grup",
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
@@ -40,10 +47,20 @@ class Team(models.Model):
     class Meta:
         verbose_name = "Equip"
 
+    def __str__(self):
+        return self.name
+
 
 class Field(models.Model):
     name = models.CharField("Nom", max_length=255)
     for_finals = models.BooleanField("Per jugar finals", default=False)
+
+    class Meta:
+        verbose_name = "Pista"
+        verbose_name_plural = "Pistes"
+
+    def __str__(self):
+        return self.name
 
 
 class Match(models.Model):
@@ -65,5 +82,15 @@ class Match(models.Model):
     home_team_points = models.PositiveIntegerField("Punts equip local", default=0)
     away_team_points = models.PositiveIntegerField("Punts equip visitant", default=0)
 
-    start_time = models.DateTimeField()
+    start_time = models.DateTimeField("Hora de joc")
     game_field = models.ForeignKey(Field, verbose_name="Pista", on_delete=models.PROTECT)
+
+    class Meta:
+        verbose_name = "Partit"
+        ordering = [
+            'start_time',
+            'game_field',
+        ]
+
+    def __str__(self):
+        return self.name

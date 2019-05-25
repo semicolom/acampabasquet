@@ -3,7 +3,7 @@ from .test import *
 DEBUG = True
 
 # Django debug toolbar settings
-DEBUG_TOOLBAR = True
+DEBUG_TOOLBAR = False
 if DEBUG_TOOLBAR:
     INSTALLED_APPS += [
         'debug_toolbar',

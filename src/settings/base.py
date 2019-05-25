@@ -31,7 +31,7 @@ ADMIN_URL = env('DJANGO_ADMIN_URL', default='admin')
 # Application definition
 INSTALLED_APPS = [
     # Local
-    'main.apps.MainConfig',
+    'main',
 
     # Django
     'django.contrib.admin',
@@ -109,9 +109,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'CA'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Madrid'
 
 USE_I18N = True
 
