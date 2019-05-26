@@ -1,9 +1,13 @@
 from django.db import models
 
+INF = 0
+CAD = 1
+ABS = 2
+
 AGES = [
-    ('inf', "Infantil"),
-    ('cad', "Cadet"),
-    ('abs', "Absoluta"),
+    (INF, "Infantil"),
+    (CAD, "Cadet"),
+    (ABS, "Absoluta"),
 ]
 SEXES = [
     ('masc', "Masculina"),
@@ -12,15 +16,28 @@ SEXES = [
 ]
 
 
-class Group(models.Model):
+class BaseModel(models.Model):
+    created = models.DateTimeField(
+        "Creado",
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        "Actualizado",
+        auto_now=True,
+    )
+
+    class Meta:
+        abstract = True
+
+
+class Group(BaseModel):
     name = models.CharField(
         "Nom",
         max_length=255,
     )
-    category = models.CharField(
+    category = models.PositiveIntegerField(
         "Categoria",
         choices=AGES,
-        max_length=255,
     )
     modality = models.CharField(
         "Modalitat",
@@ -30,21 +47,21 @@ class Group(models.Model):
 
     class Meta:
         verbose_name = "Grup"
+        ordering = ['category', 'created']
 
     def __str__(self):
         return self.name
 
 
-class Team(models.Model):
+class Team(BaseModel):
     name = models.CharField(
         "Nom",
         max_length=255,
     )
 
-    category = models.CharField(
+    category = models.PositiveIntegerField(
         "Categoria",
         choices=AGES,
-        max_length=255,
     )
     modality = models.CharField(
         "Modalitat",
@@ -83,6 +100,7 @@ class Team(models.Model):
 
     class Meta:
         verbose_name = "Equip"
+        ordering = ['created']
 
     def __str__(self):
         return self.name

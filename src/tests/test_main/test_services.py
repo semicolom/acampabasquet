@@ -1,39 +1,91 @@
-from django.test import SimpleTestCase
+from django.test import TestCase
 
+from main.models import INF, Team, Field, Group
 from main.services import Schedule
 
 
-class ScheduleTestCase(SimpleTestCase):
-    def test_get_creuements(self):
-        teams = [1, 2, 3]
-        result = Schedule.get_match_combinations(teams)
-        self.assertEqual(
-            result,
-            [
-                (1, 2), (3, 1),
-                (2, 3)
-            ]
+class ScheduleTestCase(TestCase):
+    def setUp(self):
+        self.group_1 = Group.objects.create(name="Group 1", category=INF)
+        self.team_1 = Team.objects.create(name="Team 1", group=self.group_1, category=INF)
+        self.team_2 = Team.objects.create(name="Team 2", group=self.group_1, category=INF)
+        self.team_3 = Team.objects.create(name="Team 3", group=self.group_1, category=INF)
+
+        self.group_2 = Group.objects.create(name="Group 2", category=INF)
+        self.team_4 = Team.objects.create(name="Team 4", group=self.group_2, category=INF)
+        self.team_5 = Team.objects.create(name="Team 5", group=self.group_2, category=INF)
+        self.team_6 = Team.objects.create(name="Team 6", group=self.group_2, category=INF)
+        self.team_7 = Team.objects.create(name="Team 7", group=self.group_2, category=INF)
+
+    def test_get_match_combinations(self):
+        with self.subTest("With 3 teams"):
+            teams = [self.team_1, self.team_2, self.team_3]
+
+            result = Schedule.get_match_combinations(teams)
+
+            self.assertEqual(
+                result,
+                [
+                    (self.team_1, self.team_2), (self.team_3, self.team_1),
+                    (self.team_2, self.team_3)
+                ]
+            )
+
+        with self.subTest("With 4 teams"):
+            teams = [self.team_1, self.team_2, self.team_3, self.team_4]
+
+            result = Schedule.get_match_combinations(teams)
+
+            self.assertEqual(
+                result,
+                [
+                    (self.team_1, self.team_2), (self.team_3, self.team_1),
+                    (self.team_1, self.team_4),
+                    (self.team_3, self.team_2), (self.team_2, self.team_4),
+                    (self.team_4, self.team_3)
+                ]
+            )
+
+        with self.subTest("With 5 teams"):
+            teams = [self.team_1, self.team_2, self.team_3, self.team_4, self.team_5]
+
+            result = Schedule.get_match_combinations(teams)
+
+            self.assertEqual(
+                result,
+                [
+                    (self.team_1, self.team_2), (self.team_3, self.team_1),
+                    (self.team_1, self.team_4), (self.team_5, self.team_1),
+                    (self.team_2, self.team_3), (self.team_4, self.team_2),
+                    (self.team_2, self.team_5),
+                    (self.team_4, self.team_3), (self.team_3, self.team_5),
+                    (self.team_5, self.team_4),
+                ]
+            )
+
+    def test_get_groups_matches(self):
+        group_dict = Schedule().get_groups_matches()
+
+        self.assertDictEqual(
+            group_dict,
+            {
+                self.group_1: [
+                    (self.team_1, self.team_2), (self.team_3, self.team_1),
+                    (self.team_2, self.team_3)
+                ],
+                self.group_2: [
+                    (self.team_4, self.team_5), (self.team_6, self.team_4),
+                    (self.team_4, self.team_7),
+                    (self.team_6, self.team_5), (self.team_5, self.team_7),
+                    (self.team_7, self.team_6)
+                ]
+            }
         )
 
-        teams = [1, 2, 3, 4]
-        result = Schedule.get_match_combinations(teams)
-        self.assertEqual(
-            result,
-            [
-                (1, 2), (3, 1), (1, 4),
-                (3, 2), (2, 4),
-                (4, 3)
-            ]
-        )
+    def test_get_schedule(self):
+        Field.objects.create(name="Field 1")
+        Field.objects.create(name="Field 2")
 
-        teams = [1, 2, 3, 4, 5]
-        result = Schedule.get_match_combinations(teams)
-        self.assertEqual(
-            result,
-            [
-                (1, 2), (3, 1), (1, 4), (5, 1),
-                (2, 3), (4, 2), (2, 5),
-                (4, 3), (3, 5),
-                (5, 4),
-            ]
-        )
+        matches = Schedule().get_schedule()
+
+        self.assertEqual(len(matches), 9)
