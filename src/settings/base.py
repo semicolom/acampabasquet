@@ -1,5 +1,5 @@
 """
-Django settings for 24 hours basket project.
+Django settings for acampabasquet project.
 """
 
 import os
@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': '24hours',
-        'USER': env('DJANGO_DATABASE_DEFAULT_USER', default='twentyfourhours'),
+        'NAME': 'acampabasquet',
+        'USER': env('DJANGO_DATABASE_DEFAULT_USER', default='acampabasquet'),
         'PASSWORD': env(
             'DJANGO_DATABASE_DEFAULT_PASSWORD',
-            default='24hours'
+            default='acampabasquet'
         ),
         'HOST': env('DJANGO_DATABASE_DEFAULT_HOST', default='127.0.0.1'),
     }
@@ -143,7 +143,7 @@ LOGGING = {
         'file': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
-            'filename': env('DJANGO_LOG_FILE', default='/tmp/24hours.log'),
+            'filename': env('DJANGO_LOG_FILE', default='/tmp/acampabasquet.log'),
         },
     },
     'loggers': {
@@ -160,7 +160,7 @@ DEFAULT_FILE_STORAGE = 'main.storage_backends.MediaStorage'
 AWS_ACCESS_KEY_ID = env('DJANGO_AWS_ACCESS_KEY_ID', default='')
 AWS_SECRET_ACCESS_KEY = env('DJANGO_AWS_SECRET_ACCESS_KEY', default='')
 AWS_QUERYSTRING_AUTH = False
-AWS_STORAGE_BUCKET_NAME = '24hours'
+AWS_STORAGE_BUCKET_NAME = 'acampabasquet'
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -169,4 +169,4 @@ EMAIL_PORT = env('DJANGO_EMAIL_PORT', default='')
 EMAIL_HOST_USER = env('DJANGO_EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = env('DJANGO_EMAIL_HOST_PASSWORD', default='')
 EMAIL_USE_TLS = True
-SERVER_EMAIL = 'no-reply@24hores.esporlesbc.com'
+SERVER_EMAIL = 'no-reply@acampabasquet.com'

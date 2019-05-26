@@ -1,4 +1,4 @@
-# 24 hours basket
+# Acampabàsquet
 
 This app will manage a 24 hours basketball championship
 
@@ -16,10 +16,10 @@ Create a PostgreSQL database
 ```
 sudo su - postgres
 psql
-CREATE DATABASE "24hours";
-CREATE USER twentyfourhours WITH PASSWORD "24hours";
-GRANT ALL PRIVILEGES ON DATABASE "24hours" TO twentyfourhours;
-ALTER USER twentyfourhours CREATEDB;
+CREATE DATABASE acampabasquet;
+CREATE USER acampabasquet WITH PASSWORD 'acampabasquet';
+GRANT ALL PRIVILEGES ON DATABASE "acampabasquet" TO acampabasquet;
+ALTER USER acampabasquet CREATEDB;
 ```
 
 Then run:

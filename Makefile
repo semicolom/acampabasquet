@@ -9,7 +9,7 @@ REQUIREMENTS:=requirements/requirements.txt
 REQUIREMENTS_BASE:=requirements/base.txt
 REQUIREMENTS_TEST:=requirements/test.txt
 
-ARTIFACT:=24hours.tar.gz
+ARTIFACT:=acampabasquet.tar.gz
 PIP_DOWNLOAD:=.pip_download
 
 .PHONY: requirements
