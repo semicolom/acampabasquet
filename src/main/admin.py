@@ -1,6 +1,8 @@
 from django.contrib import admin
+from django.shortcuts import render
 
 from . import models
+from .forms import GroupsForm
 
 
 @admin.register(models.Team)
@@ -34,6 +36,21 @@ class TeamAdmin(admin.ModelAdmin):
     search_fields = [
         'name',
     ]
+
+    actions = ['create_group']
+
+    def create_group(self, request, queryset):
+        # TODO: Logic on post
+        return render(
+            request,
+            'main/admin/create_group.html',
+            context={
+                **self.admin_site.each_context(request),
+                'form': GroupsForm,
+                'teams': queryset,
+            }
+        )
+    create_group.short_description = "Crear un grup a partir dels equips seleccionats"
 
 
 @admin.register(models.Group)

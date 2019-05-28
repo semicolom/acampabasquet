@@ -4,15 +4,15 @@ INF = 0
 CAD = 1
 ABS = 2
 
-AGES = [
+CATEGORIES = [
     (INF, "Infantil"),
     (CAD, "Cadet"),
     (ABS, "Absoluta"),
 ]
-SEXES = [
-    ('masc', "Masculina"),
-    ('fem', "Femenina"),
-    ('mix', "Mixta"),
+MODALITIES = [
+    ('masc', "Masculí"),
+    ('fem', "Femení"),
+    ('mix', "Mixt"),
 ]
 
 
@@ -37,11 +37,11 @@ class Group(BaseModel):
     )
     category = models.PositiveIntegerField(
         "Categoria",
-        choices=AGES,
+        choices=CATEGORIES,
     )
     modality = models.CharField(
         "Modalitat",
-        choices=SEXES,
+        choices=MODALITIES,
         max_length=255,
     )
 
@@ -61,11 +61,11 @@ class Team(BaseModel):
 
     category = models.PositiveIntegerField(
         "Categoria",
-        choices=AGES,
+        choices=CATEGORIES,
     )
     modality = models.CharField(
         "Modalitat",
-        choices=SEXES,
+        choices=MODALITIES,
         max_length=255,
     )
 

@@ -1,0 +1,28 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+    <div class="delete-confirmation">
+        <h2>Equips</h2>
+        <ul>
+            {% for team in teams %}
+                <li>{{ team }} ({{ team.get_category_display }} {{ team.get_modality_display }})</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Selecciona el grup on afegir els equips</h2>
+        <form method="post">
+            <div style="display: block">
+                {% csrf_token %}
+                {{ form }}
+                <input type="hidden" name="action" value="create_group" />
+            </div>
+
+            <br>
+
+            <div>
+                <a href="#" class="button cancel-link">Torna endarrere</a>
+                <input type="submit" value="Crear grup">
+            </div>
+        </form>
+      </div>
+{% endblock %}
