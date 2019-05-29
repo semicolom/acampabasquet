@@ -10,19 +10,23 @@
         </ul>
 
         <h2>Selecciona el grup on afegir els equips</h2>
-        <form method="post">
+
+        <form method="post" action="">
+            {% csrf_token %}
+
             <div style="display: block">
-                {% csrf_token %}
                 {{ form }}
-                <input type="hidden" name="action" value="create_group" />
+
+                <input type="hidden" name="action" value="add_teams">
+                <input type="hidden" name="post" value="yes">
             </div>
 
             <br>
 
             <div>
-                <a href="#" class="button cancel-link">Torna endarrere</a>
-                <input type="submit" value="Crear grup">
+                <a href="{{ back_url }}" class="button cancel-link">Torna endarrere</a>
+                <input type="submit" value="Afegir equips">
             </div>
         </form>
-      </div>
+    </div>
 {% endblock %}
