@@ -10,7 +10,52 @@ from .models import Team, Field, Group, Match
 
 class Schedule:
     datetime_start = "2019-06-15 19:00"
+    datetime_end = "2019-06-156 19:00"
     match_length = 15  # Mins
+
+    def create_slots(self):
+        """
+        Returns the list of available slots with the category restrictions.
+        Will be used to find the best possible slot
+        [
+            {
+                'time': '19:00',
+                'field: 'field_id',
+                'local_team': 'id_local_team',
+                'away_team': 'id_away_team',
+                'category': 'inf' / 'cad' / 'abs'
+                'free': True / False
+            }
+        ]
+        """
+
+        slots = []
+
+        fields = list(Field.objects.filter(for_finals=False))
+        fields_num = len(fields)
+        if fields_num == 0:
+            raise Exception("S'han de crear les pistes de joc")
+        current_field = 0
+
+        start_time = parse_datetime(self.datetime_start)
+        end_time = parse_datetime(self.datetime_end)
+        while start_time < end_time:
+            # TODO: Generate empty slots every hour. At 20:00 field 1, at 21:00 field 2...
+            slots.append({
+                'time': start_time,
+                'field': fields[current_field],
+                'local_team': None,
+                'away_team': None,
+                'free': True,  # Redundant, I could use local_team, away_team or category
+                'allowed_categories': [],  # TODO
+                'category': None,  # TODO
+            })
+
+            current_field = (current_field + 1) % fields_num
+            if current_field == 0:
+                start_time = start_time + timedelta(minutes=self.match_length)
+
+        return slots
 
     @staticmethod
     def get_match_combinations(teams: List[Team]) -> List[tuple]:
@@ -77,3 +122,19 @@ class Schedule:
         Match.objects.bulk_create(match_list)
 
         return match_list
+
+"""
+Ronda 
+
+Inf 19:00 - 22:00
+
+Cad 22:00 - 00:00
+
+Abs 00:00 - 05:00
+
+Finals Inf
+
+Finals Cad
+
+Finals Abs
+"""
