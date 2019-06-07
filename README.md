@@ -105,7 +105,7 @@ Hi ha 3 pistes disponibles però depen des volum d'equips se juga només en 2 pi
 
 Cada equip pertany a una categoria. Hi ha 3 categories: Infantil, Cadet i Absoluta. Per cada categoria es equips poden ser masculí o femení. Si hi ha equips mixtes es colocaran a altres categories. Si a una categoria hi ha pocs equips s'ajuntaran masculina i femenina.
 
-Cada categoria jugarà una competició en modo lliga (veure quadres FBIB). Si hi ha categories molt grans, per exemple de 12, intentar dividir-les en 2 subcategories de 6 equips.
+Cada categoria jugarà una competició en modo lliga (veure quadres FBIB) i només partit d'anada. Si hi ha categories molt grans, per exemple de 12, intentar dividir-les en 2 subcategories de 6 equips.
 
 Si una categoria té 2 subcategories, se disputarà una final 1r contra 1r i una semi 2n contra 2n.
 Si una categoria no te subcategories, se disuputaran 2 semis, 1r contra 4t i 2n contra 3r. Es guanyadors disputaran sa final. (Pendent de Aina)
@@ -114,3 +114,18 @@ Si una categoria es mixta (hi ha equips masculins i femenins), se disputara una 
 La categoria Infantil no pot jugar partits entre les 02:00 i les 07:00. Si no es pot emplenar tot el quadre amb els equips que hi ha, deixar forats buids per possibles canvis.
 
 Si un equip no se presenta, marcar partit com 23 a 0 a favor del equip presentat.
+
+
+### Tasques
+- DONE Poder afegir multiples equips a un grup
+- DONE Crear un generador de equips, grups de test
+- Poder generar partits a través de s'admin
+- Treure un error si es guarda un equip a la meteixa hora i pista que un altre
+- Poder veure llistat de partits (no admin)
+- Poder veure detalls de un grup (no admin)
+- Poder veure detalls d'un equip (no admin)
+- Generar partits aleatoriament (categories / modalitats mescaldes)
+- Fer que un equip no jugui molt seguit ni molt separat
+- Posar hores mortes a s'horari
+- Fer que infantil no jugui de nit
+- Gestionar finals

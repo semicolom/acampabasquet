@@ -123,9 +123,7 @@ class FieldAdmin(admin.ModelAdmin):
 class MatchAdmin(admin.ModelAdmin):
     list_display = [
         '__str__',
-        'home_team',
         'home_team_points',
-        'away_team',
         'away_team_points',
         'start_time',
         'game_field',

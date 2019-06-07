@@ -48,9 +48,13 @@ class Schedule:
 
     def get_schedule(self):
         group_matches = self.get_groups_matches()
-        fields = Field.objects.filter(for_finals=False)
+
+        fields = list(Field.objects.filter(for_finals=False))
         fields_num = len(fields)
+        if fields_num == 0:
+            raise Exception("S'han de crear les pistes de joc")
         current_field = 0
+
         match_list = []
         start_time = parse_datetime(self.datetime_start)
 
