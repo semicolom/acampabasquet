@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
-from main.models import Field, Team, Group, Match, CATEGORIES, MODALITIES
+
+from main.models import CATEGORIES, MODALITIES, Team, Field, Group, Match
 from main.services import Schedule
 
 

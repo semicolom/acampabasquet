@@ -119,13 +119,15 @@ Si un equip no se presenta, marcar partit com 23 a 0 a favor del equip presentat
 ### Tasques
 - DONE Poder afegir multiples equips a un grup
 - DONE Crear un generador de equips, grups de test
+- DONE Treure un error si es guarda un equip a la meteixa hora i pista que un altre
+- Arreglar native times
+- Generar partits aleatoriament (categories / modalitats mescaldes)
+- Fer que infantil no jugui de nit
+- Fer que un equip no jugui molt seguit ni molt separat
+- Posar hores mortes a s'horari
 - Poder generar partits a través de s'admin
-- Treure un error si es guarda un equip a la meteixa hora i pista que un altre
 - Poder veure llistat de partits (no admin)
 - Poder veure detalls de un grup (no admin)
 - Poder veure detalls d'un equip (no admin)
-- Generar partits aleatoriament (categories / modalitats mescaldes)
-- Fer que un equip no jugui molt seguit ni molt separat
-- Posar hores mortes a s'horari
-- Fer que infantil no jugui de nit
 - Gestionar finals
+- Poder exportar / imprimir horaris

@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 INF = 0
@@ -168,3 +169,14 @@ class Match(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, *kwargs)
+
+    def clean(self):
+        if Match.objects.filter(
+            start_time=self.start_time,
+            game_field=self.game_field,
+        ).exists():
+            raise ValidationError("Ja existeix un partit a aquella hora en aquella pista")
