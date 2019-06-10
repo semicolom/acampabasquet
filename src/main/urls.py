@@ -2,12 +2,18 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 
+from . import views
+
 admin.site.site_header = "Acampabàsquet"
 admin.site.site_title = "Acampabàsquet"
 admin.site.index_title = ''
 
 urlpatterns = [
     path('{}/'.format(settings.ADMIN_URL), admin.site.urls),
+    path('', views.HomeView.as_view(), name='home'),
+    path('grups/', views.GroupsView.as_view(), name='groups'),
+    path('grups/<int:pk>', views.GroupDetailView.as_view(), name='group-detail'),
+    path('grups/equips/<int:pk>', views.TeamView.as_view(), name='team'),
 ]
 
 # On development serve media and static files using django

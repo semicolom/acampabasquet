@@ -101,7 +101,14 @@ class Team(BaseModel):
 
     class Meta:
         verbose_name = "Equip"
-        ordering = ['created']
+        ordering = [
+            '-games_won',
+            'games_lost',
+            '-points',
+            'points_against',
+            '-games_played',
+            'created',
+        ]
 
     def __str__(self):
         return self.name
