@@ -127,14 +127,16 @@ Si un equip no se presenta, marcar partit com 23 a 0 a favor del equip presentat
     - DONE Fer que un equip no jugui molt separat
     - DONE Posar hores mortes a s'horari
 
-- Simulador de resultats
-- Gestionar finals
-
 - DONE Arreglar native times
 
-- Poder generar partits a través de s'admin
+- DONE Poder generar partits a través de s'admin
+
+- Simulador de resultats
+
 - Poder veure llistat de partits (no admin)
 - Poder veure detalls de un grup (no admin)
 - Poder veure detalls d'un equip (no admin)
+
+- Gestionar finals
 
 - Poder exportar / imprimir horaris

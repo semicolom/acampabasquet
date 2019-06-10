@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand
 
 from main.models import CATEGORIES, MODALITIES, Team, Field, Group, Match
-from main.services import Schedule
 
 
 class Command(BaseCommand):
@@ -56,13 +55,9 @@ class Command(BaseCommand):
                 modality_index += 1
             category_index += 1
 
-    def create_schedule(self):
-        Schedule().create_schedule()
-
     def handle(self, *args, **options):
         self.clear()
 
         self.create_fields()
         self.create_groups()
         self.create_teams()
-        self.create_schedule()

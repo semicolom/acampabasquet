@@ -1,8 +1,10 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import path
 
 from main.forms import MatchForm
+from main.services import Schedule
 
 from . import models
 from .forms import GroupsForm
@@ -124,6 +126,7 @@ class FieldAdmin(admin.ModelAdmin):
 @admin.register(models.Match)
 class MatchAdmin(admin.ModelAdmin):
     form = MatchForm
+    change_list_template = "main/admin/matches_changelist.html"
 
     list_display = [
         '__str__',
@@ -142,3 +145,21 @@ class MatchAdmin(admin.ModelAdmin):
         'home_team__name',
         'away_team__name',
     ]
+
+    def get_urls(self):
+        urls = super().get_urls()
+
+        my_urls = [
+            path('schedule/', self.create_schedule),
+        ] + urls
+
+        return my_urls
+
+    def create_schedule(self, request):
+        if models.Match.objects.all().exists():
+            self.message_user(request, "Ja hi ha partits creats", level=messages.ERROR)
+        else:
+            Schedule().create_schedule()
+            self.message_user(request, "S'han creat tots els partits")
+
+        return HttpResponseRedirect("../")
