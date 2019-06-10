@@ -106,17 +106,20 @@ class Schedule:
             next_possible_time = previous_match.start_time + timedelta(
                 minutes=self.match_length * 6
             )
+            previous_field = previous_match.game_field
         else:
             next_possible_time = timezone.make_aware(
                 parse_datetime(self.datetime_start),
                 timezone.get_default_timezone()
             )
+            previous_field = None
 
         for slot in slots:
             if (
                 slot.get('free') and
                 group.category in slot.get('allowed_categories') and
-                slot.get('time') >= next_possible_time
+                slot.get('time') >= next_possible_time and
+                previous_field != slot.get('field')
             ):
                 slot['free'] = False
                 slot['home_team'] = match[0]

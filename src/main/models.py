@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 
 INF = 0
 CAD = 1
@@ -105,6 +106,38 @@ class Team(BaseModel):
     def __str__(self):
         return self.name
 
+    def update_points(self):
+        self.points = 0
+        self.points_against = 0
+        self.games_played = 0
+        self.games_won = 0
+        self.games_lost = 0
+
+        played_matches = Match.objects\
+            .filter(Q(home_team=self) | Q(away_team=self))\
+            .exclude(Q(home_team_points=0) & Q(away_team_points=0))\
+            .distinct()
+
+        self.games_played = len(played_matches)
+
+        for match in played_matches:
+            if match.home_team == self:
+                self.points += match.home_team_points
+                self.points_against += match.away_team_points
+                if match.home_team_points > match.away_team_points:
+                    self.games_won += 1
+                else:
+                    self.games_lost += 1
+            else:
+                self.points += match.away_team_points
+                self.points_against += match.home_team_points
+                if match.away_team_points > match.home_team_points:
+                    self.games_won += 1
+                else:
+                    self.games_lost += 1
+
+        self.save()
+
 
 class Field(models.Model):
     name = models.CharField(
@@ -168,3 +201,8 @@ class Match(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.home_team.update_points()
+        self.away_team.update_points()

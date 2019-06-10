@@ -8,6 +8,7 @@ curtsies==0.3.0
 Django==2.2.2
 django-environ==0.4.5
 django-extensions==2.1.7
+django-merged-inlines==1.0.3
 django-storages==1.7.1
 docutils==0.14
 greenlet==0.4.15

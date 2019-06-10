@@ -14,3 +14,6 @@ django-environ  # https://github.com/joke2k/django-environ
 pillow
 boto3
 django-storages
+
+# Admin improvements
+django-merged-inlines  # https://github.com/MattBroach/Django-Merged-Inlines

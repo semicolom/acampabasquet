@@ -3,6 +3,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path
 
+from merged_inlines.admin import MergedInlineAdmin
+
 from main.forms import MatchForm
 from main.services import Schedule
 
@@ -26,8 +28,20 @@ class TeamInline(admin.TabularInline):
     ]
 
 
+class MatchHomeInline(admin.TabularInline):
+    model = models.Match
+    extra = 0
+    fk_name = 'home_team'
+
+
+class MatchAwayInline(admin.TabularInline):
+    model = models.Match
+    extra = 0
+    fk_name = 'away_team'
+
+
 @admin.register(models.Team)
-class TeamAdmin(admin.ModelAdmin):
+class TeamAdmin(MergedInlineAdmin):
     list_display = [
         '__str__',
         'category',
@@ -38,6 +52,21 @@ class TeamAdmin(admin.ModelAdmin):
         'games_played',
         'games_won',
         'games_lost',
+    ]
+
+    inlines = [
+        MatchHomeInline,
+        MatchAwayInline,
+    ]
+
+    merged_field_order = [
+        'name',
+        'home_team_points',
+        'away_team_points',
+        'start_time',
+        'game_field',
+        'home_team',
+        'away_team',
     ]
 
     readonly_fields = [

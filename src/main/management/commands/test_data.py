@@ -4,7 +4,7 @@ from main.models import CATEGORIES, MODALITIES, Team, Field, Group, Match
 
 
 class Command(BaseCommand):
-    help = "Regenerates the IndexedProductVariant table"
+    help = "Creates test fields, groups and teams"
 
     def clear(self):
         Match.objects.all().delete()

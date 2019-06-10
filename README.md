@@ -120,18 +120,18 @@ Si un equip no se presenta, marcar partit com 23 a 0 a favor del equip presentat
 - DONE Poder afegir multiples equips a un grup
 - DONE Crear un generador de equips, grups de test
 - DONE Treure un error si es guarda un equip a la meteixa hora i pista que un altre
-
 - DONE Generar partits repartits:
     - DONE Fer que infantil no jugui de nit
     - DONE Fer que un equip no jugui molt seguit
     - DONE Fer que un equip no jugui molt separat
     - DONE Posar hores mortes a s'horari
-
 - DONE Arreglar native times
-
 - DONE Poder generar partits a través de s'admin
+- DONE Simulador de resultats
+- DONE Poder veure llistat de partits (admin)
+- DONE Poder veure detalls de un grup (admin)
+- DONE Poder veure detalls d'un equip (admin)
 
-- Simulador de resultats
 
 - Poder veure llistat de partits (no admin)
 - Poder veure detalls de un grup (no admin)
