@@ -1,16 +1,18 @@
 from datetime import timedelta
-from typing import List
+import random
+from typing import List, Tuple
 
+from django.db.models import Q
+from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 
-from .models import Team, Field, Group, Match
-
-# from math import factorial
+from .models import ABS, CAD, CATEGORIES, Team, Field, Group, Match
 
 
 class Schedule:
     datetime_start = "2019-06-15 19:00"
-    datetime_end = "2019-06-156 19:00"
+    datetime_end = "2019-06-16 19:00"
+
     match_length = 15  # Mins
 
     def create_slots(self):
@@ -19,12 +21,13 @@ class Schedule:
         Will be used to find the best possible slot
         [
             {
-                'time': '19:00',
-                'field: 'field_id',
-                'local_team': 'id_local_team',
+                'time': '19:00',  # Match start time
+                'field: 'field_id',  # Match field
+                'home_team': 'id_local_team',
                 'away_team': 'id_away_team',
                 'category': 'inf' / 'cad' / 'abs'
-                'free': True / False
+                'free': True / False  # Will help us to identify empty slots
+                'allowed_categories': [],  # List of allowed categories for that time slot
             }
         ]
         """
@@ -37,25 +40,88 @@ class Schedule:
             raise Exception("S'han de crear les pistes de joc")
         current_field = 0
 
-        start_time = parse_datetime(self.datetime_start)
-        end_time = parse_datetime(self.datetime_end)
+        empty_slots_counter = 1
+
+        start_time = timezone.make_aware(
+            parse_datetime(self.datetime_start),
+            timezone.get_default_timezone()
+        )
+        end_time = timezone.make_aware(
+            parse_datetime(self.datetime_end),
+            timezone.get_default_timezone()
+        )
+
+        no_inf_start_datetime = timezone.make_aware(
+            parse_datetime("2019-06-16 02:00"),
+            timezone.get_default_timezone()
+        )
+        no_inf_end_datetime = timezone.make_aware(
+            parse_datetime("2019-06-16 07:00"),
+            timezone.get_default_timezone()
+        )
+
         while start_time < end_time:
-            # TODO: Generate empty slots every hour. At 20:00 field 1, at 21:00 field 2...
+            # Adds free slots every 9 matches (every hour in different fields)
+            free_slot = empty_slots_counter % 9 != 0
+
+            if no_inf_start_datetime <= start_time <= no_inf_end_datetime:
+                # INF category cannot play between 02:00 i les 07:00
+                allowed_categories = [CAD, ABS]
+            else:
+                allowed_categories = [category[0] for category in CATEGORIES]
+            # TODO: Make category abs to play later than sooner
+
             slots.append({
                 'time': start_time,
                 'field': fields[current_field],
-                'local_team': None,
+                'home_team': None,
                 'away_team': None,
-                'free': True,  # Redundant, I could use local_team, away_team or category
-                'allowed_categories': [],  # TODO
-                'category': None,  # TODO
+                'free': free_slot,
+                'allowed_categories': allowed_categories,
             })
+
+            empty_slots_counter += 1
 
             current_field = (current_field + 1) % fields_num
             if current_field == 0:
                 start_time = start_time + timedelta(minutes=self.match_length)
 
         return slots
+
+    def get_next_free_slot(self, slots: List, group: Group, match: Tuple):
+        home_team = match[0]
+        away_team = match[1]
+
+        # Preivous match where home_team or away_team played
+        previous_matches = Match.objects.filter(
+            Q(home_team=home_team) |
+            Q(home_team=away_team) |
+            Q(away_team=home_team) |
+            Q(away_team=away_team)
+        )
+        if previous_matches.exists():
+            previous_match = previous_matches.reverse()[0]
+
+            # Next possible time they can play: Previous match time + 1h:30min
+            next_possible_time = previous_match.start_time + timedelta(
+                minutes=self.match_length * 6
+            )
+        else:
+            next_possible_time = timezone.make_aware(
+                parse_datetime(self.datetime_start),
+                timezone.get_default_timezone()
+            )
+
+        for slot in slots:
+            if (
+                slot.get('free') and
+                group.category in slot.get('allowed_categories') and
+                slot.get('time') >= next_possible_time
+            ):
+                slot['free'] = False
+                slot['home_team'] = match[0]
+                slot['away_team'] = match[1]
+                return slot
 
     @staticmethod
     def get_match_combinations(teams: List[Team]) -> List[tuple]:
@@ -87,54 +153,32 @@ class Schedule:
 
         for group in Group.objects.all():
             teams = group.team_set.all()
-            group_matches[group] = cls.get_match_combinations(teams)
+
+            combinations = cls.get_match_combinations(teams)
+            random.shuffle(combinations)
+
+            group_matches[group] = combinations
 
         return group_matches
 
-    def get_schedule(self):
+    def create_schedule(self):
         group_matches = self.get_groups_matches()
 
-        fields = list(Field.objects.filter(for_finals=False))
-        fields_num = len(fields)
-        if fields_num == 0:
-            raise Exception("S'han de crear les pistes de joc")
-        current_field = 0
-
-        match_list = []
-        start_time = parse_datetime(self.datetime_start)
+        slots = self.create_slots()
 
         for group, matches in group_matches.items():
             for match in matches:
-                home_team = match[0]
-                away_team = match[1]
-                match = Match(
+                slot = self.get_next_free_slot(slots, group, match)
+
+                home_team = slot.get('home_team')
+                away_team = slot.get('away_team')
+
+                Match.objects.create(
                     name=f"{home_team} vs. {away_team} ({group})",
                     home_team=home_team,
                     away_team=away_team,
-                    game_field=fields[current_field],
-                    start_time=start_time,
+                    game_field=slot.get('field'),
+                    start_time=slot.get('time'),
                 )
-                match_list.append(match)
-                current_field = (current_field + 1) % fields_num
-                if current_field == 0:
-                    start_time = start_time + timedelta(minutes=self.match_length)
 
-        Match.objects.bulk_create(match_list)
-
-        return match_list
-
-"""
-Ronda 
-
-Inf 19:00 - 22:00
-
-Cad 22:00 - 00:00
-
-Abs 00:00 - 05:00
-
-Finals Inf
-
-Finals Cad
-
-Finals Abs
-"""
+        return Match.objects.all()

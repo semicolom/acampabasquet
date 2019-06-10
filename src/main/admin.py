@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
+from main.forms import MatchForm
+
 from . import models
 from .forms import GroupsForm
 
@@ -121,6 +123,8 @@ class FieldAdmin(admin.ModelAdmin):
 
 @admin.register(models.Match)
 class MatchAdmin(admin.ModelAdmin):
+    form = MatchForm
+
     list_display = [
         '__str__',
         'home_team_points',

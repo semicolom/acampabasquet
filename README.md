@@ -121,15 +121,16 @@ Si un equip no se presenta, marcar partit com 23 a 0 a favor del equip presentat
 - DONE Crear un generador de equips, grups de test
 - DONE Treure un error si es guarda un equip a la meteixa hora i pista que un altre
 
-- Generar partits repartits:
-    - Fer que infantil no jugui de nit
-    - Fer que un equip no jugui molt seguit ni molt separat
-    - Posar hores mortes a s'horari
+- DONE Generar partits repartits:
+    - DONE Fer que infantil no jugui de nit
+    - DONE Fer que un equip no jugui molt seguit
+    - DONE Fer que un equip no jugui molt separat
+    - DONE Posar hores mortes a s'horari
 
 - Simulador de resultats
 - Gestionar finals
 
-- Arreglar native times
+- DONE Arreglar native times
 
 - Poder generar partits a través de s'admin
 - Poder veure llistat de partits (no admin)

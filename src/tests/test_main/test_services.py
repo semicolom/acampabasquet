@@ -63,29 +63,10 @@ class ScheduleTestCase(TestCase):
                 ]
             )
 
-    def test_get_groups_matches(self):
-        group_dict = Schedule().get_groups_matches()
-
-        self.assertDictEqual(
-            group_dict,
-            {
-                self.group_1: [
-                    (self.team_1, self.team_2), (self.team_3, self.team_1),
-                    (self.team_2, self.team_3)
-                ],
-                self.group_2: [
-                    (self.team_4, self.team_5), (self.team_6, self.team_4),
-                    (self.team_4, self.team_7),
-                    (self.team_6, self.team_5), (self.team_5, self.team_7),
-                    (self.team_7, self.team_6)
-                ]
-            }
-        )
-
     def test_get_schedule(self):
         Field.objects.create(name="Field 1")
         Field.objects.create(name="Field 2")
 
-        matches = Schedule().get_schedule()
+        matches = Schedule().create_schedule()
 
         self.assertEqual(len(matches), 9)

@@ -46,7 +46,7 @@ class Command(BaseCommand):
                     category=category[0],
                     modality=modality[0],
                 )
-                for index in range(7):
+                for index in range(1, 6):
                     Team.objects.create(
                         name=f"Equip {index}",
                         category=category[0],
@@ -57,7 +57,7 @@ class Command(BaseCommand):
             category_index += 1
 
     def create_schedule(self):
-        Schedule().get_schedule()
+        Schedule().create_schedule()
 
     def handle(self, *args, **options):
         self.clear()
