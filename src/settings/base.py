@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # Third party
     'django_extensions',
     'merged_inlines',
+    'djtools.seo',
 ]
 
 MIDDLEWARE = [
@@ -71,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'djtools.seo.context_processors.google_analytics',
                 'main.context_processors.settings_context',
             ],
         },
@@ -167,3 +169,6 @@ SERVER_EMAIL = 'no-reply@acampabasquet.com'
 
 # Constants
 SITE_NAME = "Acampabàsquet 2019"
+
+# Google Analytics
+GOOGLE_ANALYTICS_TRACKING_ID = env('DJANGO_GOOGLE_ANALYTICS_TRACKING_ID', default=None)
