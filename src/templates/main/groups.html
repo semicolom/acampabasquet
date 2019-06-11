@@ -10,24 +10,28 @@
             </div>
 
             <div class="row">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th scope="col">Nom</th>
-                            <th scope="col">Categoria</th>
-                            <th scope="col">Modelitat</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for group in groups %}
+                {% if groups %}
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
                             <tr>
-                                <td><a href="{% url 'group-detail' group.id %}">{{ group.name }}</a></td>
-                                <td>{{ group.get_category_display }}</td>
-                                <td>{{ group.get_modality_display }}</td>
+                                <th scope="col">Nom</th>
+                                <th scope="col">Categoria</th>
+                                <th scope="col">Modelitat</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for group in groups %}
+                                <tr>
+                                    <td><a href="{% url 'group-detail' group.id %}">{{ group.name }}</a></td>
+                                    <td>{{ group.get_category_display }}</td>
+                                    <td>{{ group.get_modality_display }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>Encara no s'han creat els grups</p>
+                {% endif %}
             </div>
         </div>
     </section>
