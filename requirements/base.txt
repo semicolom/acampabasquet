@@ -14,3 +14,6 @@ django-merged-inlines  # https://github.com/MattBroach/Django-Merged-Inlines
 
 # SEO utils
 django-tools-seo  # https://github.com/semicolom/django-tools-seo
+
+# Testing fake data
+faker

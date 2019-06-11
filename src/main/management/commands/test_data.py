@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from main.models import CATEGORIES, MODALITIES, Team, Field, Group, Match
+from faker import Faker
 
 
 class Command(BaseCommand):
@@ -39,6 +40,8 @@ class Command(BaseCommand):
         category_index = 0
         modality_index = 0
 
+        fake = Faker('dk_DK')
+
         for category in CATEGORIES:
             for modality in MODALITIES:
                 grup = Group.objects.get(
@@ -47,7 +50,7 @@ class Command(BaseCommand):
                 )
                 for index in range(1, 6):
                     Team.objects.create(
-                        name=f"Equip {index}",
+                        name=fake.name().split()[1],
                         category=category[0],
                         modality=modality[0],
                         group=grup,
