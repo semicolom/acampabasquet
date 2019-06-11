@@ -1,6 +1,5 @@
 django
-
-# PostgreSQL - Python
+gunicorn[gevent]
 psycopg2
 
 # A better shell
