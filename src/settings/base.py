@@ -71,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'main.context_processors.settings_context',
             ],
         },
     },
@@ -163,3 +164,6 @@ EMAIL_HOST_USER = env('DJANGO_EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = env('DJANGO_EMAIL_HOST_PASSWORD', default='')
 EMAIL_USE_TLS = True
 SERVER_EMAIL = 'no-reply@acampabasquet.com'
+
+# Constants
+SITE_NAME = "Acampabàsquet 2019"
