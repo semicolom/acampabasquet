@@ -53,51 +53,8 @@ Update packages: `make requirements`. Creates a requirements.txt file with the l
 
 `make migrate` Will execute a migrate with development settings.
 
-### Notes
-Objectiu:
-- Un equipo ha de poder sabre quan torna a jugar
-- Tenir es creuaments entre equipos automatizats
-
-Coses a tenir en compte
-- Cada equip pertany a una categoria
-- Un equpip no ha d'estar molt de temps sense jugar ni jugar molt seguit. Jugar cada 1h:30 2h
-
-Domini
-- Acces domini esporlesbc.com o un de nou? Domini nou: acampabasquetebc.com
-
-- Que ha de veure organització i quines accions podrà fer?
-    > Seguents partits (quan i on)
-    > Classificacions
-    > Resultats
-    > Introduir resultat d'un partit
-    > Poder crear un equip
-    > Poder crear categories (ja ho faig jo)
-- Que han de veure es jugadors?
-    > Seguents partits (quan i on)
-    > Classificació
-    > Resultats
-
-Models
-- Equipo
-    > Nom
-    > Categoria
-- Categoria
-    > Nom
-- Partit
-    > Local (equip)
-    > Visitant (equip)
-    > Resultat (punts local - punts visitant)
-- Pista
-    > Nom
-- Classificació
-    > Categoria
-    > Equips (M2M) ordenats
-- Time slot
-    > Hora inici
-
-
 ### Funcionament
-Se jugarà una competició 3x3 de basket per categories amb una durada màxima de 24h (nomrmalment unes 16h).
+Se jugarà una competició 3x3 de basket per categories amb una durada màxima de 24h.
 
 Es partits son de 12 minuts i se juguen dedins un slot de 15 minuts. La competició comença a les 19:00.
 
@@ -114,28 +71,3 @@ Si una categoria es mixta (hi ha equips masculins i femenins), se disputara una 
 La categoria Infantil no pot jugar partits entre les 02:00 i les 07:00. Si no es pot emplenar tot el quadre amb els equips que hi ha, deixar forats buids per possibles canvis.
 
 Si un equip no se presenta, marcar partit com 23 a 0 a favor del equip presentat.
-
-
-### Tasques
-- DONE Poder afegir multiples equips a un grup
-- DONE Crear un generador de equips, grups de test
-- DONE Treure un error si es guarda un equip a la meteixa hora i pista que un altre
-- DONE Generar partits repartits:
-    - DONE Fer que infantil no jugui de nit
-    - DONE Fer que un equip no jugui molt seguit
-    - DONE Fer que un equip no jugui molt separat
-    - DONE Posar hores mortes a s'horari
-- DONE Arreglar native times
-- DONE Poder generar partits a través de s'admin
-- DONE Simulador de resultats
-- DONE Poder veure llistat de partits (admin)
-- DONE Poder veure detalls de un grup (admin)
-- DONE Poder veure detalls d'un equip (admin)
-
-- DONE Poder veure llistat de partits (no admin)
-- DONE Poder veure detalls de un grup (no admin)
-- DONE Poder veure detalls d'un equip (no admin)
-
-- Gestionar finals
-
-- Poder exportar / imprimir horaris

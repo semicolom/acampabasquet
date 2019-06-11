@@ -83,12 +83,9 @@ WSGI_APPLICATION = 'wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'acampabasquet',
+        'NAME': env('DJANGO_DATABASE_DEFAULT_NAME', default='acampabasquet'),
         'USER': env('DJANGO_DATABASE_DEFAULT_USER', default='acampabasquet'),
-        'PASSWORD': env(
-            'DJANGO_DATABASE_DEFAULT_PASSWORD',
-            default='acampabasquet'
-        ),
+        'PASSWORD': env('DJANGO_DATABASE_DEFAULT_PASSWORD', default='acampabasquet'),
         'HOST': env('DJANGO_DATABASE_DEFAULT_HOST', default='127.0.0.1'),
     }
 }
@@ -157,13 +154,6 @@ LOGGING = {
         },
     }
 }
-
-# AWS S3
-DEFAULT_FILE_STORAGE = 'main.storage_backends.MediaStorage'
-AWS_ACCESS_KEY_ID = env('DJANGO_AWS_ACCESS_KEY_ID', default='')
-AWS_SECRET_ACCESS_KEY = env('DJANGO_AWS_SECRET_ACCESS_KEY', default='')
-AWS_QUERYSTRING_AUTH = False
-AWS_STORAGE_BUCKET_NAME = 'acampabasquet'
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
