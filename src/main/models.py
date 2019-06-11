@@ -168,6 +168,7 @@ class Match(models.Model):
     name = models.CharField(
         "Nom",
         max_length=255,
+        blank=True,
     )
 
     home_team = models.ForeignKey(
@@ -175,12 +176,16 @@ class Match(models.Model):
         verbose_name="Equip local",
         on_delete=models.PROTECT,
         related_name='games_as_home_team',
+        blank=True,
+        null=True,
     )
     away_team = models.ForeignKey(
         Team,
         verbose_name="Equip visitant",
         on_delete=models.PROTECT,
         related_name='games_as_away_team',
+        blank=True,
+        null=True,
     )
 
     home_team_points = models.PositiveIntegerField(
@@ -207,9 +212,24 @@ class Match(models.Model):
         ]
 
     def __str__(self):
-        return self.name
+        if self.name:
+            return self.name
+
+        if self.home_team and self.away_team:
+            return f"{self.home_team} vs {self.away_team}"
+
+        return "-"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        self.home_team.update_points()
-        self.away_team.update_points()
+
+        if self.home_team and self.away_team:
+            self.home_team.update_points()
+            self.away_team.update_points()
+
+    @property
+    def group(self):
+        if self.home_team and self.away_team:
+            if self.home_team.group == self.away_team.group:
+                return self.home_team.group
+        return None

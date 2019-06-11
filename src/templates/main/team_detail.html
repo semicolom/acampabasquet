@@ -20,6 +20,7 @@
                                 <th scope="col">Partits perduts</th>
                                 <th scope="col">Punts a favor</th>
                                 <th scope="col">Punts en contra</th>
+                                <th scope="col">Categoria</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -29,11 +30,15 @@
                                 <td>{{ team.games_lost }}</td>
                                 <td>{{ team.points }}</td>
                                 <td>{{ team.points_against }}</td>
+                                <td><a href="{% url 'group-detail' group.id %}">{{ group }}</a></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            {# space #}
+            <div><br></div>
 
             {% include "main/matches_snippet.html" %}
         </div>

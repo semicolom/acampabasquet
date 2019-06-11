@@ -173,13 +173,9 @@ class Schedule:
             for match in matches:
                 slot = self.get_next_free_slot(slots, group, match)
 
-                home_team = slot.get('home_team')
-                away_team = slot.get('away_team')
-
                 Match.objects.create(
-                    name=f"{home_team} vs. {away_team} ({group})",
-                    home_team=home_team,
-                    away_team=away_team,
+                    home_team=slot.get('home_team'),
+                    away_team=slot.get('away_team'),
                     game_field=slot.get('field'),
                     start_time=slot.get('time'),
                 )

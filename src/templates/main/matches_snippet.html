@@ -7,24 +7,49 @@
                     <thead>
                         <tr>
                             <th scope="col">Hora</th>
+                            <th scope="col">Pista</th>
+                            <th scope="col">Partit</th>
                             <th scope="col">Local (negre)</th>
                             <th scope="col">Punts</th>
                             <th scope="col">Visitant (color)</th>
                             <th scope="col">Punts</th>
-                            <th scope="col">Pista</th>
-                            <th scope="col">Grup</th>
+                            {% if not group %}
+                                <th scope="col">Grup</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
                         {% for match in matches %}
                             <tr>
-                                <td>{{ match.start_time.time }}</td>
-                                <td><a href="{% url 'team' match.home_team.id %}">{{ match.home_team.name }}</a></td>
-                                <td>{{ match.home_team_points }}</td>
-                                <td><a href="{% url 'team' match.away_team.id %}">{{ match.away_team.name }}</a></td>
-                                <td>{{ match.away_team_points }}</td>
+                                <td>{{ match.start_time | time:"H:i" }}</td>
                                 <td>{{ match.game_field }}</td>
-                                <td><a href="{% url 'group-detail' match.home_team.group.id %}">{{ match.home_team.group }}</a></td>
+                                <td>{{ match }}</td>
+                                <td>
+                                    {% if match.home_team %}
+                                        <a href="{% url 'team' match.home_team.id %}">{{ match.home_team.name }}</a>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>{{ match.home_team_points }}</td>
+                                <td>
+                                    {% if match.away_team %}
+                                        <a href="{% url 'team' match.away_team.id %}">{{ match.away_team.name }}</a>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>{{ match.away_team_points }}</td>
+
+                                {% if not group %}
+                                    <td>
+                                        {% if match.group %}
+                                            <a href="{% url 'group-detail' match.group.id %}">{{ match.group }}</a>
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>

@@ -38,7 +38,10 @@ class TeamView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['matches'] = Match.objects.filter(
-            Q(home_team=self.object) | Q(away_team=self.object)
-        )
+        context.update({
+            'matches': Match.objects.filter(
+                Q(home_team=self.object) | Q(away_team=self.object)
+            ),
+            'group': self.object.group,
+        })
         return context
