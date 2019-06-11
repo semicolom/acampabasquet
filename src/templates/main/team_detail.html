@@ -5,32 +5,34 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2 class="section-heading text-uppercase">{{ team }}</h2>
+                    <h2>{{ team }}</h2>
                 </div>
             </div>
 
             <div class="row">
                 <h3>Resultats</h3>
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th scope="col">Partits jugats</th>
-                            <th scope="col">Partits guanyats</th>
-                            <th scope="col">Partits perduts</th>
-                            <th scope="col">Punts a favor</th>
-                            <th scope="col">Punts en contra</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{{ team.games_played }}</td>
-                            <td>{{ team.games_won }}</td>
-                            <td>{{ team.games_lost }}</td>
-                            <td>{{ team.points }}</td>
-                            <td>{{ team.points_against }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Partits jugats</th>
+                                <th scope="col">Partits guanyats</th>
+                                <th scope="col">Partits perduts</th>
+                                <th scope="col">Punts a favor</th>
+                                <th scope="col">Punts en contra</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ team.games_played }}</td>
+                                <td>{{ team.games_won }}</td>
+                                <td>{{ team.games_lost }}</td>
+                                <td>{{ team.points }}</td>
+                                <td>{{ team.points_against }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {% include "main/matches_snippet.html" %}

@@ -168,7 +168,7 @@ EMAIL_USE_TLS = True
 SERVER_EMAIL = 'no-reply@acampabasquet.com'
 
 # Constants
-SITE_NAME = "Acampabàsquet 2019"
+SITE_NAME = "Acampabàsquet"
 
 # Google Analytics
 GOOGLE_ANALYTICS_TRACKING_ID = env('DJANGO_GOOGLE_ANALYTICS_TRACKING_ID', default=None)

@@ -1,36 +1,37 @@
 <div class="row">
-    <h2>Partits</h2>
-</div>
-
-<div class="row">
-    {% if matches %}
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th scope="col">Hora</th>
-                    <th scope="col">Local (negre)</th>
-                    <th scope="col">Punts</th>
-                    <th scope="col">Visitant (color)</th>
-                    <th scope="col">Punts</th>
-                    <th scope="col">Pista</th>
-                    <th scope="col">Grup</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for match in matches %}
-                    <tr>
-                        <td>{{ match.start_time.time }}</td>
-                        <td><a href="{% url 'team' match.home_team.id %}">{{ match.home_team.name }}</a></td>
-                        <td>{{ match.home_team_points }}</td>
-                        <td><a href="{% url 'team' match.away_team.id %}">{{ match.away_team.name }}</a></td>
-                        <td>{{ match.away_team_points }}</td>
-                        <td>{{ match.game_field }}</td>
-                        <td><a href="{% url 'group-detail' match.home_team.group.id %}">{{ match.home_team.group }}</a></td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>Encara no s'ha creat el calendari de partits</p>
-    {% endif %}
+    <div class="col-md-12">
+        <h3>Partits</h3>
+        {% if matches %}
+            <div class="table-responsive">
+                <table class="table table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Hora</th>
+                            <th scope="col">Local (negre)</th>
+                            <th scope="col">Punts</th>
+                            <th scope="col">Visitant (color)</th>
+                            <th scope="col">Punts</th>
+                            <th scope="col">Pista</th>
+                            <th scope="col">Grup</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for match in matches %}
+                            <tr>
+                                <td>{{ match.start_time.time }}</td>
+                                <td><a href="{% url 'team' match.home_team.id %}">{{ match.home_team.name }}</a></td>
+                                <td>{{ match.home_team_points }}</td>
+                                <td><a href="{% url 'team' match.away_team.id %}">{{ match.away_team.name }}</a></td>
+                                <td>{{ match.away_team_points }}</td>
+                                <td>{{ match.game_field }}</td>
+                                <td><a href="{% url 'group-detail' match.home_team.group.id %}">{{ match.home_team.group }}</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>Encara no s'ha creat el calendari de partits</p>
+        {% endif %}
+    </div>
 </div>
