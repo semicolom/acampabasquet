@@ -13,7 +13,6 @@ CATEGORIES = [
 MODALITIES = [
     ('masc', "Masculí"),
     ('fem', "Femení"),
-    ('mix', "Mixt"),
 ]
 
 
@@ -212,11 +211,14 @@ class Match(models.Model):
         ]
 
     def __str__(self):
+        if self.home_team and self.away_team:
+            name = f"{self.home_team} vs {self.away_team}"
+            if self.name:
+                name = f"{name} ({self.name})"
+            return name
+
         if self.name:
             return self.name
-
-        if self.home_team and self.away_team:
-            return f"{self.home_team} vs {self.away_team}"
 
         return "-"
 

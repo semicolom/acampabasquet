@@ -6,12 +6,13 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 
-from .models import ABS, CAD, CATEGORIES, Team, Field, Group, Match
+from .models import Team, Field, Group, Match
 
 
 class Schedule:
     datetime_start = "2019-06-15 19:00"
     datetime_end = "2019-06-16 19:00"
+    available_field_datetime_start = "2019-06-15 23:00"
 
     match_length = 15  # Mins
 
@@ -27,7 +28,6 @@ class Schedule:
                 'away_team': 'id_away_team',
                 'category': 'inf' / 'cad' / 'abs'
                 'free': True / False  # Will help us to identify empty slots
-                'allowed_categories': [],  # List of allowed categories for that time slot
             }
         ]
         """
@@ -40,9 +40,7 @@ class Schedule:
             raise Exception("S'han de crear les pistes de joc")
         current_field = 0
 
-        empty_slots_counter = 1
-
-        start_time = timezone.make_aware(
+        current_time = timezone.make_aware(
             parse_datetime(self.datetime_start),
             timezone.get_default_timezone()
         )
@@ -51,44 +49,44 @@ class Schedule:
             timezone.get_default_timezone()
         )
 
-        no_inf_start_datetime = timezone.make_aware(
-            parse_datetime("2019-06-16 02:00"),
-            timezone.get_default_timezone()
-        )
-        no_inf_end_datetime = timezone.make_aware(
-            parse_datetime("2019-06-16 07:00"),
+        available_field_datetime_start = timezone.make_aware(
+            parse_datetime(self.available_field_datetime_start),
             timezone.get_default_timezone()
         )
 
-        while start_time < end_time:
-            # Adds free slots every 9 matches (every hour in different fields)
-            free_slot = empty_slots_counter % 9 != 0
+        empty_slot_factor = 60 / self.match_length * fields_num + 1
+        free_slot = True
+        empty_slots_counter = 1
 
-            if no_inf_start_datetime <= start_time <= no_inf_end_datetime:
-                # INF category cannot play between 02:00 i les 07:00
-                allowed_categories = [CAD, ABS]
-            else:
-                allowed_categories = [category[0] for category in CATEGORIES]
-            # TODO: Make category abs to play later than sooner
+        while current_time < end_time:
+            if current_time >= available_field_datetime_start:
+                # Adds free slots every 9 matches (every hour in different fields)
+                free_slot = empty_slots_counter % empty_slot_factor != 0
+
+                if not free_slot:
+                    Match.objects.create(
+                        name="Pista disponible",
+                        game_field=fields[current_field],
+                        start_time=current_time,
+                    )
 
             slots.append({
-                'time': start_time,
+                'time': current_time,
                 'field': fields[current_field],
                 'home_team': None,
                 'away_team': None,
                 'free': free_slot,
-                'allowed_categories': allowed_categories,
             })
 
             empty_slots_counter += 1
 
             current_field = (current_field + 1) % fields_num
             if current_field == 0:
-                start_time = start_time + timedelta(minutes=self.match_length)
+                current_time = current_time + timedelta(minutes=self.match_length)
 
         return slots
 
-    def get_next_free_slot(self, slots: List, group: Group, match: Tuple):
+    def get_next_free_slot(self, slots: List, match: Tuple):
         home_team = match[0]
         away_team = match[1]
 
@@ -117,7 +115,6 @@ class Schedule:
         for slot in slots:
             if (
                 slot.get('free') and
-                group.category in slot.get('allowed_categories') and
                 slot.get('time') >= next_possible_time and
                 previous_field != slot.get('field')
             ):
@@ -151,33 +148,29 @@ class Schedule:
         return result
 
     @classmethod
-    def get_groups_matches(cls) -> dict:
-        group_matches = {}
+    def get_matches_per_group(cls) -> List:
+        combinations = []
 
         for group in Group.objects.all():
             teams = group.team_set.all()
+            combinations += cls.get_match_combinations(teams)
 
-            combinations = cls.get_match_combinations(teams)
-            random.shuffle(combinations)
-
-            group_matches[group] = combinations
-
-        return group_matches
+        return combinations
 
     def create_schedule(self):
-        group_matches = self.get_groups_matches()
-
         slots = self.create_slots()
 
-        for group, matches in group_matches.items():
-            for match in matches:
-                slot = self.get_next_free_slot(slots, group, match)
+        matches = self.get_matches_per_group()
+        random.shuffle(matches)
 
-                Match.objects.create(
-                    home_team=slot.get('home_team'),
-                    away_team=slot.get('away_team'),
-                    game_field=slot.get('field'),
-                    start_time=slot.get('time'),
-                )
+        for match in matches:
+            slot = self.get_next_free_slot(slots, match)
+
+            Match.objects.create(
+                home_team=slot.get('home_team'),
+                away_team=slot.get('away_team'),
+                game_field=slot.get('field'),
+                start_time=slot.get('time'),
+            )
 
         return Match.objects.all()

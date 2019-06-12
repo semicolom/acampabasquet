@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand
 
-from main.models import CATEGORIES, MODALITIES, Team, Field, Group, Match
 from faker import Faker
+
+from main.models import CATEGORIES, MODALITIES, Team, Field, Group, Match
 
 
 class Command(BaseCommand):
