@@ -1,5 +1,4 @@
 from datetime import timedelta
-import random
 from typing import List, Tuple
 
 from django.db.models import Q
@@ -10,8 +9,8 @@ from .models import Team, Field, Group, Match
 
 
 class Schedule:
-    datetime_start = "2019-06-15 19:00"
-    datetime_end = "2019-06-16 19:00"
+    datetime_start = "2019-06-15 19:30"
+    datetime_end = "2019-06-16 19:30"
     available_field_datetime_start = "2019-06-15 23:00"
 
     match_length = 15  # Mins
@@ -86,11 +85,11 @@ class Schedule:
 
         return slots
 
-    def get_next_free_slot(self, slots: List, match: Tuple):
+    def get_next_free_slot(self, slots: List, match: Tuple, waiting_time: int):
         home_team = match[0]
         away_team = match[1]
 
-        # Preivous match where home_team or away_team played
+        # Previous match where home_team or away_team played
         previous_matches = Match.objects.filter(
             Q(home_team=home_team) |
             Q(home_team=away_team) |
@@ -100,23 +99,22 @@ class Schedule:
         if previous_matches.exists():
             previous_match = previous_matches.reverse()[0]
 
-            # Next possible time they can play: Previous match time + 1h:30min
+            # Next possible time they can play
             next_possible_time = previous_match.start_time + timedelta(
-                minutes=self.match_length * 6
+                minutes=waiting_time
             )
-            previous_field = previous_match.game_field
+            # previous_field = previous_match.game_field
         else:
             next_possible_time = timezone.make_aware(
                 parse_datetime(self.datetime_start),
                 timezone.get_default_timezone()
             )
-            previous_field = None
+            # previous_field = None
 
         for slot in slots:
             if (
                 slot.get('free') and
-                slot.get('time') >= next_possible_time and
-                previous_field != slot.get('field')
+                slot.get('time') >= next_possible_time
             ):
                 slot['free'] = False
                 slot['home_team'] = match[0]
@@ -150,32 +148,77 @@ class Schedule:
                 j += 1
             i += 1
 
+        # random.shuffle(result)
+
         return result
 
     @classmethod
-    def get_matches_per_group(cls) -> List:
-        combinations = []
+    def get_groups_matches(cls) -> dict:
+        group_matches = {}
 
         for group in Group.objects.all():
             teams = group.team_set.all()
-            combinations += cls.get_match_combinations(teams)
 
-        return combinations
+            combinations = cls.get_match_combinations(teams)
+            # random.shuffle(combinations)
+
+            group_matches[group] = combinations
+
+        return group_matches
+
+    @staticmethod
+    def get_waiting_time_by_group(group: Group):
+        num_teams = Team.objects.filter(group=group).count()
+
+        if num_teams == 3:
+            return 3 * 60  # 3h 00min
+        if num_teams == 4:
+            return 2 * 60  # 2h 00min
+        if num_teams == 5:
+            return 3 * 60  # 3h 00min
+        if num_teams == 6:
+            return 2.5 * 60  # 2h 30min
+
+        return 2 * 60  # 2h 00min
 
     def create_schedule(self):
+        """
+        - Un equip no pot jugar dos partits molt seguits
+        - Un equip no pot estar molt de temps sense jugar
+        - Un equip hauria de jugar partits separats minim 2h i maxim 3h30min
+        - Cada hora hi ha d'haver una pista buida
+        - Abans de les 23:00 no hi pot haver cap pista buida
+        - No hi pot haver grups de menys de 3 equips
+        - Grups de 3 i 4 equips fan anada i tornada
+
+        # Equips per grup   # partits per grup  # Partits per equip  Temps de descans entre partits
+        3                   6                   4                    3h 00min
+        4                   12                  6                    2h 00min
+        5                   10                  4                    3h 00min
+        6                   15                  5                    2h 30min
+        7                   21                  6                    2h 00min
+        """
+
         slots = self.create_slots()
+        groups_matches = self.get_groups_matches()
 
-        matches = self.get_matches_per_group()
-        random.shuffle(matches)
+        # Sort groups per amount of matches
+        groups_by_amount_of_matches = sorted(
+            groups_matches,
+            key=lambda k: len(groups_matches[k]),
+            reverse=True
+        )
 
-        for match in matches:
-            slot = self.get_next_free_slot(slots, match)
-
-            Match.objects.create(
-                home_team=slot.get('home_team'),
-                away_team=slot.get('away_team'),
-                game_field=slot.get('field'),
-                start_time=slot.get('time'),
-            )
+        for group in groups_by_amount_of_matches:
+            matches = groups_matches[group]
+            waiting_time = self.get_waiting_time_by_group(group)
+            for match in matches:
+                slot = self.get_next_free_slot(slots, match, waiting_time)
+                Match.objects.create(
+                    home_team=slot.get('home_team'),
+                    away_team=slot.get('away_team'),
+                    game_field=slot.get('field'),
+                    start_time=slot.get('time'),
+                )
 
         return Match.objects.all()

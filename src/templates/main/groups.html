@@ -24,7 +24,7 @@
                                 <tbody>
                                     {% for group in groups %}
                                         <tr>
-                                            <td><a href="{% url 'group-detail' group.id %}">{{ group.name }}</a></td>
+                                            <td><a href="{% url 'group-detail' group.id %}">{{ group }}</a></td>
                                             <td>{{ group.get_category_display }}</td>
                                             <td>{{ group.get_modality_display }}</td>
                                         </tr>

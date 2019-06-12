@@ -1,9 +1,10 @@
+import random
+
 from django.core.management.base import BaseCommand
 
 from faker import Faker
 
-from main.models import CATEGORIES, MODALITIES, Team, Field, Group, Match
-import random
+from main.models import ABS, CAD, FEM, INF, MASC, CATEGORIES, MODALITIES, Team, Field, Group, Match
 
 
 class Command(BaseCommand):
@@ -30,14 +31,42 @@ class Command(BaseCommand):
         )
 
     def create_groups(self):
-        for category in CATEGORIES:
-            for modality in MODALITIES:
-                for index in range(1, 3):
-                    Group.objects.create(
-                        name=f"{category[1]} {modality[1]} grup {index}",
-                        category=category[0],
-                        modality=modality[0],
-                    )
+        # INF
+        Group.objects.create(
+            category=INF,
+            modality=MASC,
+        )
+        Group.objects.create(
+            category=INF,
+            modality=FEM,
+        )
+
+        # CAD
+        Group.objects.create(
+            category=CAD,
+            modality=MASC,
+        )
+        Group.objects.create(
+            category=CAD,
+            modality=FEM,
+        )
+
+        # ABS
+        Group.objects.create(
+            name=f"Absoluta masculina grup 1",
+            category=ABS,
+            modality=MASC,
+        )
+        Group.objects.create(
+            name=f"Absoluta masculina grup 2",
+            category=ABS,
+            modality=MASC,
+        )
+        Group.objects.create(
+            name=f"Absoluta femenina",
+            category=ABS,
+            modality=FEM,
+        )
 
     def create_teams(self):
         category_index = 0
@@ -52,7 +81,7 @@ class Command(BaseCommand):
                     modality=modality[0],
                 )
                 for group in grups:
-                    for index in range(1, random.randint(4, 7)):
+                    for index in range(1, random.randint(4, 6)):
                         Team.objects.create(
                             name=fake.name().split()[1],
                             category=category[0],

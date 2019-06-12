@@ -4,6 +4,8 @@ from django.db.models import Q
 INF = 0
 CAD = 1
 ABS = 2
+MASC = 'masc'
+FEM = 'fem'
 
 CATEGORIES = [
     (INF, "Infantil"),
@@ -11,8 +13,8 @@ CATEGORIES = [
     (ABS, "Absoluta"),
 ]
 MODALITIES = [
-    ('masc', "Masculí"),
-    ('fem', "Femení"),
+    (MASC, "Masculí"),
+    (FEM, "Femení"),
 ]
 
 
@@ -34,6 +36,7 @@ class Group(BaseModel):
     name = models.CharField(
         "Nom",
         max_length=255,
+        blank=True,
     )
     category = models.PositiveIntegerField(
         "Categoria",
@@ -50,6 +53,8 @@ class Group(BaseModel):
         ordering = ['category', 'created']
 
     def __str__(self):
+        if not self.name:
+            return f"{self.get_category_display()} {self.get_modality_display()}"
         return self.name
 
 

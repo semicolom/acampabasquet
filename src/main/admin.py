@@ -1,8 +1,9 @@
+import csv
+
 from django.contrib import admin, messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path
-from django.http import HttpResponse
 
 from merged_inlines.admin import MergedInlineAdmin
 
@@ -11,7 +12,6 @@ from main.services import Schedule
 
 from . import models
 from .forms import GroupsForm
-import csv
 
 
 class TeamInline(admin.TabularInline):
