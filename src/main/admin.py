@@ -2,6 +2,7 @@ from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path
+from django.http import HttpResponse
 
 from merged_inlines.admin import MergedInlineAdmin
 
@@ -10,6 +11,7 @@ from main.services import Schedule
 
 from . import models
 from .forms import GroupsForm
+import csv
 
 
 class TeamInline(admin.TabularInline):
@@ -183,7 +185,10 @@ class MatchAdmin(admin.ModelAdmin):
         'away_team__name',
     ]
 
-    actions = ['swap_matches']
+    actions = [
+        'swap_matches',
+        'export_as_csv',
+    ]
 
     def get_urls(self):
         urls = super().get_urls()
@@ -220,3 +225,18 @@ class MatchAdmin(admin.ModelAdmin):
         self.message_user(request, "Partits intercanviats correctament")
         return HttpResponseRedirect(request.get_full_path())
     swap_matches.short_description = "Intercanviar partits"
+
+    def export_as_csv(self, request, queryset):
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response)
+
+        writer.writerow(field_names)
+        for obj in queryset:
+            writer.writerow([getattr(obj, field) for field in field_names])
+
+        return response
+    export_as_csv.short_description = "Exportar a CSV"
