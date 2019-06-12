@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand
 from faker import Faker
 
 from main.models import CATEGORIES, MODALITIES, Team, Field, Group, Match
+import random
 
 
 class Command(BaseCommand):
@@ -31,11 +32,12 @@ class Command(BaseCommand):
     def create_groups(self):
         for category in CATEGORIES:
             for modality in MODALITIES:
-                Group.objects.create(
-                    name=f"{category[1]} {modality[1]}",
-                    category=category[0],
-                    modality=modality[0],
-                )
+                for index in range(1, 3):
+                    Group.objects.create(
+                        name=f"{category[1]} {modality[1]} grup {index}",
+                        category=category[0],
+                        modality=modality[0],
+                    )
 
     def create_teams(self):
         category_index = 0
@@ -45,17 +47,18 @@ class Command(BaseCommand):
 
         for category in CATEGORIES:
             for modality in MODALITIES:
-                grup = Group.objects.get(
+                grups = Group.objects.filter(
                     category=category[0],
                     modality=modality[0],
                 )
-                for index in range(1, 6):
-                    Team.objects.create(
-                        name=fake.name().split()[1],
-                        category=category[0],
-                        modality=modality[0],
-                        group=grup,
-                    )
+                for group in grups:
+                    for index in range(1, random.randint(4, 7)):
+                        Team.objects.create(
+                            name=fake.name().split()[1],
+                            category=category[0],
+                            modality=modality[0],
+                            group=group,
+                        )
                 modality_index += 1
             category_index += 1
 

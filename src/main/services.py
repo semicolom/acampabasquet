@@ -133,16 +133,21 @@ class Schedule:
         result = []
         i = 0
         home = True
+        small_group = len(teams) < 5
 
         while i < len(teams):
             j = i + 1
             while j < len(teams):
-                if home:
+                if small_group:
                     result.append((teams[i], teams[j]))
-                else:
                     result.append((teams[j], teams[i]))
+                else:
+                    if home:
+                        result.append((teams[i], teams[j]))
+                    else:
+                        result.append((teams[j], teams[i]))
+                    home = not home
                 j += 1
-                home = not home
             i += 1
 
         return result

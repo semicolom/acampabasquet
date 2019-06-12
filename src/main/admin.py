@@ -90,6 +90,14 @@ class TeamAdmin(MergedInlineAdmin):
     actions = ['add_teams']
 
     def add_teams(self, request, queryset):
+        if queryset.count() < 3:
+            self.message_user(
+                request,
+                "No es pot crear un grup amb menys de 3 equips",
+                level=messages.ERROR,
+            )
+            return HttpResponseRedirect(request.get_full_path())
+
         form = None
 
         if 'post' in request.POST:
