@@ -221,4 +221,13 @@ class Schedule:
                     start_time=slot.get('time'),
                 )
 
+        # Create remaning free slots
+        for slot in slots:
+            if slot.get('free'):
+                Match.objects.create(
+                    name="Pista disponible",
+                    game_field=slot.get('field'),
+                    start_time=slot.get('time'),
+                )
+
         return Match.objects.all()
