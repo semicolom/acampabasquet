@@ -175,6 +175,8 @@ class MatchAdmin(admin.ModelAdmin):
         'away_team__name',
     ]
 
+    actions = ['swap_matches']
+
     def get_urls(self):
         urls = super().get_urls()
 
@@ -192,3 +194,21 @@ class MatchAdmin(admin.ModelAdmin):
             self.message_user(request, "S'han creat tots els partits")
 
         return HttpResponseRedirect("../")
+
+    def swap_matches(self, request, queryset):
+        if queryset.count() != 2:
+            self.message_user(request, "S'han de seleccionar només 2 equips", level=messages.ERROR)
+            return HttpResponseRedirect(request.get_full_path())
+
+        m1 = queryset[0]
+        m2 = queryset[1]
+
+        m1.name, m1.home_team, m1.away_team, m2.name, m2.home_team, m2.away_team = \
+            m2.name, m2.home_team, m2.away_team, m1.name, m1.home_team, m1.away_team
+
+        m1.save()
+        m2.save()
+
+        self.message_user(request, "Partits intercanviats correctament")
+        return HttpResponseRedirect(request.get_full_path())
+    swap_matches.short_description = "Intercanviar partits"
