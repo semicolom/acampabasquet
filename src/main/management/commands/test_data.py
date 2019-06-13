@@ -81,7 +81,7 @@ class Command(BaseCommand):
                     modality=modality[0],
                 )
                 for group in grups:
-                    for index in range(1, random.randint(4, 6)):
+                    for index in range(1, random.randint(4, 9)):
                         Team.objects.create(
                             name=fake.name().split()[1],
                             category=category[0],

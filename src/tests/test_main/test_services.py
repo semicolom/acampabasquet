@@ -26,8 +26,14 @@ class ScheduleTestCase(TestCase):
             self.assertEqual(
                 result,
                 [
-                    (self.team_1, self.team_2), (self.team_3, self.team_1),
-                    (self.team_2, self.team_3)
+                    # Ronda 1
+                    (self.team_1, self.team_2),
+                    (self.team_3, self.team_1),
+                    (self.team_2, self.team_3),
+                    # Ronda 2
+                    (self.team_2, self.team_1),
+                    (self.team_1, self.team_3),
+                    (self.team_3, self.team_2),
                 ]
             )
 
@@ -39,10 +45,16 @@ class ScheduleTestCase(TestCase):
             self.assertEqual(
                 result,
                 [
-                    (self.team_1, self.team_2), (self.team_3, self.team_1),
+                    # Ronda 1
+                    (self.team_1, self.team_2),
+                    (self.team_3, self.team_4),
+                    (self.team_2, self.team_3),
+                    (self.team_4, self.team_1),
+                    # Ronda 2
+                    (self.team_2, self.team_1),
+                    (self.team_4, self.team_3),
+                    (self.team_3, self.team_2),
                     (self.team_1, self.team_4),
-                    (self.team_3, self.team_2), (self.team_2, self.team_4),
-                    (self.team_4, self.team_3)
                 ]
             )
 
@@ -54,12 +66,19 @@ class ScheduleTestCase(TestCase):
             self.assertEqual(
                 result,
                 [
-                    (self.team_1, self.team_2), (self.team_3, self.team_1),
-                    (self.team_1, self.team_4), (self.team_5, self.team_1),
-                    (self.team_2, self.team_3), (self.team_4, self.team_2),
-                    (self.team_2, self.team_5),
-                    (self.team_4, self.team_3), (self.team_3, self.team_5),
+                    # Ronda 1
+                    (self.team_1, self.team_2),
+                    (self.team_3, self.team_4),
+                    (self.team_5, self.team_1),
+                    (self.team_2, self.team_3),
                     (self.team_5, self.team_4),
+
+                    # Ronda 2
+                    (self.team_1, self.team_3),
+                    (self.team_2, self.team_5),
+                    (self.team_4, self.team_1),
+                    (self.team_3, self.team_5),
+                    (self.team_4, self.team_2),
                 ]
             )
 

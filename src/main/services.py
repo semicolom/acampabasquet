@@ -55,19 +55,23 @@ class Schedule:
 
         empty_slot_factor = 60 / self.match_length * fields_num + 1
         free_slot = True
-        empty_slots_counter = 1
+        empty_slots_counter = 0
 
         while current_time < end_time:
-            if current_time >= available_field_datetime_start:
+            if current_time == available_field_datetime_start and current_field == 1:
+                free_slot = False
+                empty_slots_counter = 0
+            elif current_time > available_field_datetime_start:
                 # Adds free slots every 9 matches (every hour in different fields)
+                empty_slots_counter += 1
                 free_slot = empty_slots_counter % empty_slot_factor != 0
 
-                if not free_slot:
-                    Match.objects.create(
-                        name="Pista disponible",
-                        game_field=fields[current_field],
-                        start_time=current_time,
-                    )
+            if not free_slot:
+                Match.objects.create(
+                    name="Pista disponible",
+                    game_field=fields[current_field],
+                    start_time=current_time,
+                )
 
             slots.append({
                 'time': current_time,
@@ -76,8 +80,6 @@ class Schedule:
                 'away_team': None,
                 'free': free_slot,
             })
-
-            empty_slots_counter += 1
 
             current_field = (current_field + 1) % fields_num
             if current_field == 0:
@@ -117,12 +119,12 @@ class Schedule:
                 slot.get('time') >= next_possible_time
             ):
                 slot['free'] = False
-                slot['home_team'] = match[0]
-                slot['away_team'] = match[1]
+                slot['home_team'] = home_team
+                slot['away_team'] = away_team
                 return slot
 
     @staticmethod
-    def get_match_combinations(teams: List[Team]) -> List[tuple]:
+    def old_get_match_combinations(teams: List[Team]) -> List[tuple]:
         """
         Returns the combinations of all teams without repetition.
         Teams playing at home or away should be equal
@@ -152,6 +154,98 @@ class Schedule:
 
         return result
 
+    @staticmethod
+    def get_match_combinations(teams: List[Team]) -> List[tuple]:
+        result = []
+
+        if len(teams) == 3:
+            result = [
+                (teams[0], teams[1]),
+                (teams[2], teams[0]),
+                (teams[1], teams[2]),
+
+                (teams[1], teams[0]),
+                (teams[0], teams[2]),
+                (teams[2], teams[1]),
+            ]
+
+        if len(teams) == 4:
+            result = [
+                (teams[0], teams[1]),
+                (teams[2], teams[3]),
+                (teams[1], teams[2]),
+                (teams[3], teams[0]),
+
+                (teams[1], teams[0]),
+                (teams[3], teams[2]),
+                (teams[2], teams[1]),
+                (teams[0], teams[3]),
+            ]
+
+        if len(teams) == 5:
+            result = [
+                (teams[0], teams[1]),
+                (teams[2], teams[3]),
+                (teams[4], teams[0]),
+                (teams[1], teams[2]),
+                (teams[4], teams[3]),
+
+                (teams[0], teams[2]),
+                (teams[1], teams[4]),
+                (teams[3], teams[0]),
+                (teams[2], teams[4]),
+                (teams[3], teams[1]),
+            ]
+
+        if len(teams) == 6:
+            result = [
+                (teams[0], teams[1]),
+                (teams[2], teams[3]),
+                (teams[4], teams[5]),
+                (teams[1], teams[2]),
+                (teams[5], teams[0]),
+
+                (teams[4], teams[3]),
+                (teams[0], teams[2]),
+                (teams[1], teams[4]),
+                (teams[3], teams[0]),
+                (teams[2], teams[5]),
+
+                (teams[1], teams[5]),
+                (teams[0], teams[4]),
+                (teams[3], teams[1]),
+                (teams[2], teams[4]),
+                (teams[5], teams[3]),
+            ]
+
+        if len(teams) == 7:
+            result = [
+                (teams[0], teams[1]),
+                (teams[2], teams[3]),
+                (teams[4], teams[5]),
+                (teams[6], teams[0]),
+                (teams[1], teams[2]),
+                (teams[3], teams[4]),
+                (teams[5], teams[6]),
+
+                (teams[0], teams[2]),
+                (teams[1], teams[3]),
+                (teams[4], teams[6]),
+                (teams[5], teams[0]),
+                (teams[2], teams[4]),
+                (teams[6], teams[1]),
+                (teams[3], teams[5]),
+
+                (teams[0], teams[4]),
+                (teams[2], teams[6]),
+                (teams[1], teams[5]),
+                (teams[3], teams[0]),
+                (teams[4], teams[1]),
+                (teams[5], teams[2]),
+                (teams[6], teams[3]),
+            ]
+        return result
+
     @classmethod
     def get_groups_matches(cls) -> dict:
         group_matches = {}
@@ -167,19 +261,19 @@ class Schedule:
         return group_matches
 
     @staticmethod
-    def get_waiting_time_by_group(group: Group):
-        num_teams = Team.objects.filter(group=group).count()
+    def get_waiting_time_by_group(matches: List):
+        num_matches = len(matches)
 
-        if num_teams == 3:
-            return 3 * 60  # 3h 00min
-        if num_teams == 4:
-            return 2 * 60  # 2h 00min
-        if num_teams == 5:
-            return 3 * 60  # 3h 00min
-        if num_teams == 6:
-            return 2.5 * 60  # 2h 30min
+        if num_matches < 10:
+            return 2.5 * 60
 
-        return 2 * 60  # 2h 00min
+        if num_matches < 15:
+            return 2 * 60
+
+        if num_matches < 20:
+            return 1.5 * 60
+
+        return 1 * 60
 
     def create_schedule(self):
         """
@@ -197,6 +291,13 @@ class Schedule:
         5                   10                  4                    3h 00min
         6                   15                  5                    2h 30min
         7                   21                  6                    2h 00min
+
+
+        - Colocarem partits per grups
+        - Primer grups amb més partits (així evitam que grups amb pocs partits
+            juguin molt prest i hagin d'esperar 8h per ses finals)
+        - Grups amb menos partits haurien de tenir més temps de descans
+
         """
 
         slots = self.create_slots()
@@ -211,7 +312,9 @@ class Schedule:
 
         for group in groups_by_amount_of_matches:
             matches = groups_matches[group]
-            waiting_time = self.get_waiting_time_by_group(group)
+
+            waiting_time = self.get_waiting_time_by_group(matches)
+
             for match in matches:
                 slot = self.get_next_free_slot(slots, match, waiting_time)
                 Match.objects.create(
