@@ -1,4 +1,5 @@
 import csv
+import sys
 
 from django.contrib import admin, messages
 from django.http import HttpResponse, HttpResponseRedirect
@@ -166,6 +167,7 @@ class FieldAdmin(admin.ModelAdmin):
 class MatchAdmin(admin.ModelAdmin):
     form = MatchForm
     change_list_template = "main/admin/matches_changelist.html"
+    list_per_page = sys.maxsize
 
     list_display = [
         '__str__',
