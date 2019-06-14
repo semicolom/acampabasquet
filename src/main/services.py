@@ -13,7 +13,7 @@ class Schedule:
     datetime_end = "2019-06-16 19:30"
     available_field_datetime_start = "2019-06-15 23:00"
 
-    match_length = 15  # Mins
+    match_length = 20  # Mins
 
     def create_slots(self):
         """
@@ -288,18 +288,20 @@ class Schedule:
 
     @staticmethod
     def get_waiting_time_by_group(matches: List):
-        num_matches = len(matches)
+        # num_matches = len(matches)
 
-        if num_matches < 10:
-            return 2.5 * 60
+        # if num_matches < 10:
+        #     return 2.5 * 60
 
-        if num_matches < 15:
-            return 2 * 60
+        # if num_matches < 15:
+        #     return 2 * 60
 
-        if num_matches < 20:
-            return 1.5 * 60
+        # if num_matches < 20:
+        #     return 1.5 * 60
 
-        return 1 * 60
+        # return 1 * 60
+
+        return 3 * 60
 
     def create_schedule(self):
         """
