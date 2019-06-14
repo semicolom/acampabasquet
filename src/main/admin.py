@@ -173,6 +173,7 @@ class MatchAdmin(admin.ModelAdmin):
 
     list_display = [
         '__str__',
+        'available_field',
         'home_team_points',
         'away_team_points',
         'start_time',
@@ -244,3 +245,8 @@ class MatchAdmin(admin.ModelAdmin):
 
         return response
     export_as_csv.short_description = "Exportar a CSV"
+
+    def available_field(self, obj):
+        return not obj.home_team and not obj.away_team
+    available_field.short_description = "Pista disponible"
+    available_field.boolean = True

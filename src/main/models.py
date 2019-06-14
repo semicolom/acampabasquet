@@ -243,4 +243,7 @@ class Match(models.Model):
         if self.home_team and self.away_team:
             if self.home_team.group == self.away_team.group:
                 return self.home_team.group
+            else:
+                # TODO: Hauria de ser "Cadet mixte"
+                return "Mixte"
         return None
