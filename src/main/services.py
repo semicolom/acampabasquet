@@ -159,27 +159,48 @@ class Schedule:
         result = []
 
         if len(teams) == 3:
+            # Amb anda i tornada
+            # result = [
+            #     (teams[0], teams[1]),
+            #     (teams[2], teams[0]),
+            #     (teams[1], teams[2]),
+
+            #     (teams[1], teams[0]),
+            #     (teams[0], teams[2]),
+            #     (teams[2], teams[1]),
+            # ]
+
+            # Sense anda i tornada
             result = [
                 (teams[0], teams[1]),
                 (teams[2], teams[0]),
                 (teams[1], teams[2]),
-
-                (teams[1], teams[0]),
-                (teams[0], teams[2]),
-                (teams[2], teams[1]),
             ]
 
         if len(teams) == 4:
+            # Amb anda i tornada
+            # result = [
+            #     (teams[0], teams[1]),
+            #     (teams[2], teams[3]),
+            #     (teams[1], teams[2]),
+            #     (teams[3], teams[0]),
+
+            #     (teams[1], teams[0]),
+            #     (teams[3], teams[2]),
+            #     (teams[2], teams[1]),
+            #     (teams[0], teams[3]),
+            # ]
+
+            # Sense anda i tornada
             result = [
                 (teams[0], teams[1]),
                 (teams[2], teams[3]),
-                (teams[1], teams[2]),
-                (teams[3], teams[0]),
 
-                (teams[1], teams[0]),
-                (teams[3], teams[2]),
-                (teams[2], teams[1]),
+                (teams[1], teams[2]),
                 (teams[0], teams[3]),
+
+                (teams[2], teams[0]),
+                (teams[3], teams[1]),
             ]
 
         if len(teams) == 5:
