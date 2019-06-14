@@ -301,7 +301,7 @@ class Schedule:
 
         # return 1 * 60
 
-        return 3 * 60
+        return 2.5 * 60
 
     def create_schedule(self):
         """
