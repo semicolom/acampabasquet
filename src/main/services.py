@@ -288,20 +288,20 @@ class Schedule:
 
     @staticmethod
     def get_waiting_time_by_group(matches: List):
-        # num_matches = len(matches)
+        num_matches = len(matches)
 
-        # if num_matches < 10:
-        #     return 2.5 * 60
+        if num_matches < 10:
+            return 2.5 * 60
 
-        # if num_matches < 15:
-        #     return 2 * 60
+        if num_matches < 15:
+            return 2 * 60
 
-        # if num_matches < 20:
-        #     return 1.5 * 60
+        if num_matches < 20:
+            return 1.5 * 60
 
-        # return 1 * 60
+        return 1 * 60
 
-        return 2.5 * 60
+        # return 2.5 * 60
 
     def create_schedule(self):
         """
