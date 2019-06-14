@@ -139,11 +139,13 @@ class GroupAdmin(admin.ModelAdmin):
         '__str__',
         'category',
         'modality',
+        'double_round',
     ]
 
     list_filter = [
         'category',
         'modality',
+        'double_round',
     ]
 
     search_fields = [

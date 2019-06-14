@@ -21,7 +21,7 @@ class ScheduleTestCase(TestCase):
         with self.subTest("With 3 teams"):
             teams = [self.team_1, self.team_2, self.team_3]
 
-            result = Schedule.get_match_combinations(teams)
+            result = Schedule.get_match_combinations(teams, double_round=True)
 
             self.assertEqual(
                 result,
@@ -40,7 +40,7 @@ class ScheduleTestCase(TestCase):
         with self.subTest("With 4 teams"):
             teams = [self.team_1, self.team_2, self.team_3, self.team_4]
 
-            result = Schedule.get_match_combinations(teams)
+            result = Schedule.get_match_combinations(teams, double_round=True)
 
             self.assertEqual(
                 result,

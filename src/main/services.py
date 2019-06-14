@@ -155,53 +155,58 @@ class Schedule:
         return result
 
     @staticmethod
-    def get_match_combinations(teams: List[Team]) -> List[tuple]:
+    def get_match_combinations(
+        teams: List[Team],
+        double_round: bool = False
+    ) -> List[tuple]:
         result = []
 
         if len(teams) == 3:
-            # Amb anda i tornada
-            # result = [
-            #     (teams[0], teams[1]),
-            #     (teams[2], teams[0]),
-            #     (teams[1], teams[2]),
+            if double_round:
+                # Amb anda i tornada
+                result = [
+                    (teams[0], teams[1]),
+                    (teams[2], teams[0]),
+                    (teams[1], teams[2]),
 
-            #     (teams[1], teams[0]),
-            #     (teams[0], teams[2]),
-            #     (teams[2], teams[1]),
-            # ]
-
-            # Sense anda i tornada
-            result = [
-                (teams[0], teams[1]),
-                (teams[2], teams[0]),
-                (teams[1], teams[2]),
-            ]
+                    (teams[1], teams[0]),
+                    (teams[0], teams[2]),
+                    (teams[2], teams[1]),
+                ]
+            else:
+                # Sense anda i tornada
+                result = [
+                    (teams[0], teams[1]),
+                    (teams[2], teams[0]),
+                    (teams[1], teams[2]),
+                ]
 
         if len(teams) == 4:
-            # Amb anda i tornada
-            # result = [
-            #     (teams[0], teams[1]),
-            #     (teams[2], teams[3]),
-            #     (teams[1], teams[2]),
-            #     (teams[3], teams[0]),
+            if double_round:
+                # Amb anda i tornada
+                result = [
+                    (teams[0], teams[1]),
+                    (teams[2], teams[3]),
+                    (teams[1], teams[2]),
+                    (teams[3], teams[0]),
 
-            #     (teams[1], teams[0]),
-            #     (teams[3], teams[2]),
-            #     (teams[2], teams[1]),
-            #     (teams[0], teams[3]),
-            # ]
+                    (teams[1], teams[0]),
+                    (teams[3], teams[2]),
+                    (teams[2], teams[1]),
+                    (teams[0], teams[3]),
+                ]
+            else:
+                # Sense anda i tornada
+                result = [
+                    (teams[0], teams[1]),
+                    (teams[2], teams[3]),
 
-            # Sense anda i tornada
-            result = [
-                (teams[0], teams[1]),
-                (teams[2], teams[3]),
+                    (teams[1], teams[2]),
+                    (teams[0], teams[3]),
 
-                (teams[1], teams[2]),
-                (teams[0], teams[3]),
-
-                (teams[2], teams[0]),
-                (teams[3], teams[1]),
-            ]
+                    (teams[2], teams[0]),
+                    (teams[3], teams[1]),
+                ]
 
         if len(teams) == 5:
             result = [
@@ -274,7 +279,7 @@ class Schedule:
         for group in Group.objects.all():
             teams = group.team_set.all()
 
-            combinations = cls.get_match_combinations(teams)
+            combinations = cls.get_match_combinations(teams, double_round=group.double_round)
             # random.shuffle(combinations)
 
             group_matches[group] = combinations

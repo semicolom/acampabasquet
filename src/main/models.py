@@ -47,6 +47,10 @@ class Group(BaseModel):
         choices=MODALITIES,
         max_length=255,
     )
+    double_round = models.BooleanField(
+        "Doble volta?",
+        default=False,
+    )
 
     class Meta:
         verbose_name = "Grup"
