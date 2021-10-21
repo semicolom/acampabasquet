@@ -53,17 +53,17 @@ class Command(BaseCommand):
 
         # ABS
         Group.objects.create(
-            name=f"Absoluta masculina grup 1",
+            name="Absoluta masculina grup 1",
             category=ABS,
             modality=MASC,
         )
         Group.objects.create(
-            name=f"Absoluta masculina grup 2",
+            name="Absoluta masculina grup 2",
             category=ABS,
             modality=MASC,
         )
         Group.objects.create(
-            name=f"Absoluta femenina",
+            name="Absoluta femenina",
             category=ABS,
             modality=FEM,
         )

@@ -1,9 +1,13 @@
-django
-gunicorn[gevent]
-psycopg2
+django<3
+gevent<20.12  # 20.12 fails on installation on server
+gunicorn<21
+
+# PostgreSQL - Python
+psycopg2<2.9  # 2.9.1 Fails on pip install
 
 # A better shell
-django-extensions
+django-extensions<4
+curtsies<0.3.5  # 0.3.6 fails on installation on server
 bpython
 
 # Manage enviroment variables
