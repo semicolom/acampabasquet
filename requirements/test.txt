@@ -3,5 +3,5 @@
 coverage
 django-debug-toolbar
 flake8
-isort
+isort<5
 model_mommy
