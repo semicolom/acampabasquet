@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     # Third party
     'django_extensions',
     'merged_inlines',
-    'djtools.seo',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +71,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'djtools.seo.context_processors.google_analytics',
                 'main.context_processors.settings_context',
             ],
         },
@@ -112,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-LANGUAGE_CODE = 'CA'
+LANGUAGE_CODE = 'ca'
 
 TIME_ZONE = 'Europe/Madrid'
 
@@ -122,6 +120,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'

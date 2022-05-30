@@ -1,4 +1,4 @@
-django<3
+django<5
 gevent<20.12  # 20.12 fails on installation on server
 gunicorn<21
 

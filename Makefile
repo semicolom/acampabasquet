@@ -24,6 +24,7 @@ requirements:
 	$(TMP_PIP) install -U "pip"
 	$(TMP_PIP) install -r $(REQUIREMENTS_BASE)
 	$(TMP_PIP) freeze > requirements/requirements.txt
+	$(TMP_PIP) list --outdated --format=columns > requirements/requirements-outdated.txt
 	@rm -rf temp_venv
 
 virtualenv_base:

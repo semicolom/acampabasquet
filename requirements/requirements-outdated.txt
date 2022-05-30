@@ -1,0 +1,6 @@
+Package  Version Latest  Type
+-------- ------- ------- -----
+bpython  0.20.1  0.22.1  wheel
+curtsies 0.3.4   0.3.10  sdist
+gevent   20.9.0  21.12.0 wheel
+psycopg2 2.8.6   2.9.3   sdist
