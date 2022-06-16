@@ -84,3 +84,8 @@ Si un equip no se presenta, marcar partit com 23 a 0 a favor del equip presentat
 - Marcar si un grup fa anada i tornada o no
 - Poder afegir partits a mà. Alguns partits entre grups diferents, per exemple Abs Mac vs Abs Fem
 - Dur actes partits
+
+## TODO list
+- Simplificar pistes a pista 1 i pista 2
+- Millorar generacio d'horaris
+- Gestio de "hores prohibides". Equip tal no pot jugar a aquesta franja.

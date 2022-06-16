@@ -6,8 +6,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path
 
-from merged_inlines.admin import MergedInlineAdmin
-
 from main.forms import MatchForm
 from main.services import Schedule
 
@@ -44,7 +42,7 @@ class MatchAwayInline(admin.TabularInline):
 
 
 @admin.register(models.Team)
-class TeamAdmin(MergedInlineAdmin):
+class TeamAdmin(admin.ModelAdmin):
     list_display = [
         '__str__',
         'category',

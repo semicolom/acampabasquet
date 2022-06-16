@@ -4,17 +4,25 @@ from django.db.models import Q
 INF = 0
 CAD = 1
 ABS = 2
+JUN = 3
+SEN = 4
+VET = 5
+
 MASC = 'masc'
 FEM = 'fem'
+MIX = 'mix'
 
 CATEGORIES = [
     (INF, "Infantil"),
     (CAD, "Cadet"),
-    (ABS, "Absoluta"),
+    (JUN, "Junior"),
+    (SEN, "Senior"),
+    (VET, "Veterans"),
 ]
 MODALITIES = [
     (MASC, "Masculí"),
     (FEM, "Femení"),
+    (MIX, "Mixte"),
 ]
 
 
@@ -105,6 +113,23 @@ class Team(BaseModel):
     games_lost = models.PositiveIntegerField(
         "Partits perduts",
         default=0,
+    )
+
+    # Contact info
+    contact_name = models.CharField(
+        "Nom del responsable de l'equip",
+        max_length=255,
+        blank=True,
+    )
+    contact_phone = models.CharField(
+        "Telèfon del responsable de l'equip",
+        max_length=255,
+        blank=True,
+    )
+    contact_email = models.CharField(
+        "Correu electrònic de contacte",
+        max_length=255,
+        blank=True,
     )
 
     class Meta:
