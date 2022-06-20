@@ -8,10 +8,6 @@ JUN = 3
 SEN = 4
 VET = 5
 
-MASC = 'masc'
-FEM = 'fem'
-MIX = 'mix'
-
 CATEGORIES = [
     (INF, "Infantil"),
     (CAD, "Cadet"),
@@ -19,10 +15,28 @@ CATEGORIES = [
     (SEN, "Senior"),
     (VET, "Veterans"),
 ]
+
+MASC = 'masc'
+FEM = 'fem'
+MIX = 'mix'
+
 MODALITIES = [
     (MASC, "Masculí"),
     (FEM, "Femení"),
     (MIX, "Mixte"),
+]
+
+SINGLE = 'single'
+DOUBLE = 'double'
+
+COMPETITION_TYPE_CHOICES = [
+    (SINGLE, "Partit unic"),
+    (DOUBLE, "Anada i tornada"),
+]
+
+GAME_FIELDS_CHOICES = [
+    (1, "Pista 1"),
+    (2, "Pista 2"),
 ]
 
 
@@ -41,11 +55,6 @@ class BaseModel(models.Model):
 
 
 class Group(BaseModel):
-    name = models.CharField(
-        "Nom",
-        max_length=255,
-        blank=True,
-    )
     category = models.PositiveIntegerField(
         "Categoria",
         choices=CATEGORIES,
@@ -55,19 +64,25 @@ class Group(BaseModel):
         choices=MODALITIES,
         max_length=255,
     )
-    double_round = models.BooleanField(
-        "Doble volta?",
-        default=False,
+    competition_type = models.CharField(
+        "Tipus de competicio",
+        choices=COMPETITION_TYPE_CHOICES,
+        default=SINGLE,
+        max_length=20,
     )
 
     class Meta:
         verbose_name = "Grup"
         ordering = ['category', 'created']
+        unique_together = [
+            ('category', 'modality'),
+        ]
 
     def __str__(self):
-        if not self.name:
-            return f"{self.get_category_display()} {self.get_modality_display()}"
-        return self.name
+        return f"{self.get_category_display()} {self.get_modality_display()}"
+
+    def double_round(self):
+        return self.competition_type == DOUBLE
 
 
 class Team(BaseModel):
@@ -179,31 +194,31 @@ class Team(BaseModel):
         self.save()
 
 
-class Field(models.Model):
-    name = models.CharField(
-        "Nom",
-        max_length=255,
-    )
-    for_finals = models.BooleanField(
-        "Per jugar finals",
-        default=False,
-    )
+class ForbiddenSlot(models.Model):
+    start_time = models.TimeField("Des de les")
+    end_time = models.TimeField("Fins les")
 
     class Meta:
-        verbose_name = "Pista"
-        verbose_name_plural = "Pistes"
+        abstract = True
+        verbose_name = "Franja de temps on no poden jugar"
+        verbose_name_plural = "Franges de temps on no poden jugar"
 
-    def __str__(self):
-        return self.name
+
+class GroupForbiddenSlot(ForbiddenSlot):
+    group = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+    )
+
+
+class TeamForbiddenSlot(ForbiddenSlot):
+    team = models.ForeignKey(
+        Team,
+        on_delete=models.CASCADE,
+    )
 
 
 class Match(models.Model):
-    name = models.CharField(
-        "Nom",
-        max_length=255,
-        blank=True,
-    )
-
     home_team = models.ForeignKey(
         Team,
         verbose_name="Equip local",
@@ -231,28 +246,29 @@ class Match(models.Model):
     )
 
     start_time = models.DateTimeField("Hora de joc")
-    game_field = models.ForeignKey(
-        Field,
-        verbose_name="Pista",
-        on_delete=models.PROTECT,
+    game_field = models.PositiveSmallIntegerField(
+        "Pista",
+        choices=GAME_FIELDS_CHOICES,
+    )
+
+    my_order = models.PositiveIntegerField(
+        "Ordre",
+        default=0,
+        blank=False,
+        null=False,
+        db_index=True,
     )
 
     class Meta:
         verbose_name = "Partit"
         ordering = [
+            'my_order',
             'start_time',
-            'game_field',
         ]
 
     def __str__(self):
         if self.home_team and self.away_team:
-            name = f"{self.home_team} vs {self.away_team}"
-            if self.name:
-                name = f"{name} ({self.name})"
-            return name
-
-        if self.name:
-            return self.name
+            return f"{self.home_team} vs {self.away_team}"
 
         return "-"
 

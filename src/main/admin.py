@@ -2,46 +2,51 @@ import csv
 import sys
 
 from django.contrib import admin, messages
+from django.db.models import Q
+from django.forms.models import BaseInlineFormSet
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path
 
+from adminsortable2.admin import SortableAdminMixin
+
 from main.forms import MatchForm
 from main.services import Schedule
 
-from . import models
 from .forms import GroupsForm
+from .models import Team, Group, Match, TeamForbiddenSlot, GroupForbiddenSlot
 
 
-class TeamInline(admin.TabularInline):
-    model = models.Team
-    extra = 0
-
-    readonly_fields = [
-        'name',
-        'category',
-        'modality',
-        'points',
-        'points_against',
-        'games_played',
-        'games_won',
-        'games_lost',
-    ]
+class TeamForbiddenSlotInline(admin.TabularInline):
+    model = TeamForbiddenSlot
+    extra = 1
 
 
-class MatchHomeInline(admin.TabularInline):
-    model = models.Match
-    extra = 0
+class MatchInlineFormSet(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.queryset = Match.objects.filter(
+            Q(home_team=self.instance)
+            | Q(away_team=self.instance))
+
+
+class MatchInline(admin.TabularInline):
+    model = Match
     fk_name = 'home_team'
-
-
-class MatchAwayInline(admin.TabularInline):
-    model = models.Match
+    formset = MatchInlineFormSet
     extra = 0
-    fk_name = 'away_team'
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request, obj):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
-@admin.register(models.Team)
+@admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     list_display = [
         '__str__',
@@ -56,8 +61,8 @@ class TeamAdmin(admin.ModelAdmin):
     ]
 
     inlines = [
-        MatchHomeInline,
-        MatchAwayInline,
+        TeamForbiddenSlotInline,
+        MatchInline,
     ]
 
     merged_field_order = [
@@ -131,19 +136,43 @@ class TeamAdmin(admin.ModelAdmin):
     add_teams.short_description = "Afegir equips seleccionats a un grup"
 
 
-@admin.register(models.Group)
+class GroupForbiddenSlotInline(admin.TabularInline):
+    model = GroupForbiddenSlot
+    extra = 1
+
+
+class TeamInline(admin.TabularInline):
+    model = Team
+    extra = 0
+
+    readonly_fields = [
+        'name',
+        'category',
+        'modality',
+        'points',
+        'points_against',
+        'games_played',
+        'games_won',
+        'games_lost',
+    ]
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     list_display = [
         '__str__',
         'category',
         'modality',
-        'double_round',
+        'competition_type',
     ]
 
     list_filter = [
         'category',
         'modality',
-        'double_round',
+        'competition_type',
     ]
 
     search_fields = [
@@ -151,27 +180,21 @@ class GroupAdmin(admin.ModelAdmin):
     ]
 
     inlines = [
+        GroupForbiddenSlotInline,
         TeamInline,
     ]
 
 
-@admin.register(models.Field)
-class FieldAdmin(admin.ModelAdmin):
-    list_display = [
-        '__str__',
-        'for_finals',
-    ]
-
-
-@admin.register(models.Match)
-class MatchAdmin(admin.ModelAdmin):
+@admin.register(Match)
+class MatchAdmin(SortableAdminMixin, admin.ModelAdmin):
     form = MatchForm
     change_list_template = "main/admin/matches_changelist.html"
     list_per_page = sys.maxsize
 
     list_display = [
+        'my_order',
         '__str__',
-        'available_field',
+        'get_category',
         'home_team_points',
         'away_team_points',
         'start_time',
@@ -193,6 +216,15 @@ class MatchAdmin(admin.ModelAdmin):
         'export_as_csv',
     ]
 
+    def get_category(self, obj):
+        if (
+            obj.home_team.category == obj.away_team.category
+            and obj.home_team.modality == obj.away_team.modality
+        ):
+            return f"{obj.home_team.get_category_display()} {obj.home_team.get_modality_display()}"
+        return "-"
+    get_category.short_description = "Categoria"
+
     def get_urls(self):
         urls = super().get_urls()
 
@@ -203,7 +235,7 @@ class MatchAdmin(admin.ModelAdmin):
         return my_urls
 
     def create_schedule(self, request):
-        if models.Match.objects.all().exists():
+        if Match.objects.all().exists():
             self.message_user(request, "Ja hi ha partits creats", level=messages.ERROR)
         else:
             Schedule().create_schedule()
@@ -219,8 +251,16 @@ class MatchAdmin(admin.ModelAdmin):
         m1 = queryset[0]
         m2 = queryset[1]
 
-        m1.name, m1.home_team, m1.away_team, m2.name, m2.home_team, m2.away_team = \
-            m2.name, m2.home_team, m2.away_team, m1.name, m1.home_team, m1.away_team
+        if m1.game_field != m2.game_field:
+            self.message_user(
+                request,
+                "Nomes es poden intercanviar partits a la mateixa pista",
+                level=messages.ERROR,
+            )
+            return HttpResponseRedirect(request.get_full_path())
+
+        m1.home_team, m1.away_team, m2.home_team, m2.away_team = \
+            m2.home_team, m2.away_team, m1.home_team, m1.away_team
 
         m1.save()
         m2.save()
@@ -243,8 +283,3 @@ class MatchAdmin(admin.ModelAdmin):
 
         return response
     export_as_csv.short_description = "Exportar a CSV"
-
-    def available_field(self, obj):
-        return not obj.home_team and not obj.away_team
-    available_field.short_description = "Pista disponible"
-    available_field.boolean = True

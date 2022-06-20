@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 
-from .models import Team, Field, Group, Match
+from .models import Team, Group, Match
 
 
 class Schedule:
@@ -33,7 +33,7 @@ class Schedule:
 
         slots = []
 
-        fields = list(Field.objects.filter(for_finals=False))
+        fields = [1, 2]
         fields_num = len(fields)
         if fields_num == 0:
             raise Exception("S'han de crear les pistes de joc")
@@ -53,32 +53,13 @@ class Schedule:
             timezone.get_default_timezone()
         )
 
-        empty_slot_factor = 60 / self.match_length * fields_num + 1
-        free_slot = True
-        empty_slots_counter = 0
-
         while current_time < end_time:
-            if current_time == available_field_datetime_start and current_field == 1:
-                free_slot = False
-                empty_slots_counter = 0
-            elif current_time > available_field_datetime_start:
-                # Adds free slots every 9 matches (every hour in different fields)
-                empty_slots_counter += 1
-                free_slot = empty_slots_counter % empty_slot_factor != 0
-
-            if not free_slot:
-                Match.objects.create(
-                    name="Pista disponible",
-                    game_field=fields[current_field],
-                    start_time=current_time,
-                )
-
             slots.append({
                 'time': current_time,
                 'field': fields[current_field],
                 'home_team': None,
                 'away_team': None,
-                'free': free_slot,
+                'free': True,
             })
 
             current_field = (current_field + 1) % fields_num
@@ -308,10 +289,6 @@ class Schedule:
         - Un equip no pot jugar dos partits molt seguits
         - Un equip no pot estar molt de temps sense jugar
         - Un equip hauria de jugar partits separats minim 2h i maxim 3h30min
-        - Cada hora hi ha d'haver una pista buida
-        - Abans de les 23:00 no hi pot haver cap pista buida
-        - No hi pot haver grups de menys de 3 equips
-        - Grups de 3 i 4 equips fan anada i tornada
 
         # Equips per grup   # partits per grup  # Partits per equip  Temps de descans entre partits
         3                   6                   4                    3h 00min
@@ -325,7 +302,6 @@ class Schedule:
         - Primer grups amb més partits (així evitam que grups amb pocs partits
             juguin molt prest i hagin d'esperar 8h per ses finals)
         - Grups amb menos partits haurien de tenir més temps de descans
-
         """
 
         slots = self.create_slots()
@@ -345,18 +321,18 @@ class Schedule:
 
             for match in matches:
                 slot = self.get_next_free_slot(slots, match, waiting_time)
-                Match.objects.create(
-                    home_team=slot.get('home_team'),
-                    away_team=slot.get('away_team'),
-                    game_field=slot.get('field'),
-                    start_time=slot.get('time'),
-                )
+                if slot:
+                    Match.objects.create(
+                        home_team=slot.get('home_team'),
+                        away_team=slot.get('away_team'),
+                        game_field=slot.get('field'),
+                        start_time=slot.get('time'),
+                    )
 
         # Create remaning free slots
         for slot in slots:
             if slot.get('free'):
                 Match.objects.create(
-                    name="Pista disponible",
                     game_field=slot.get('field'),
                     start_time=slot.get('time'),
                 )

@@ -71,21 +71,8 @@ Si una categoria es mixta (hi ha equips masculins i femenins), se disputara una 
 Si un equip no se presenta, marcar partit com 23 a 0 a favor del equip presentat.
 
 ## Millores futures
-- Cache a llistats
-- Posar restriccions per equipo, grup o categoria, per exemple, Equip A no juga entra les 19:00 i les 22:00. Categoria B no ha d'acabar a les 07:00.
-- Fer apartar de configuracio:
-    > Temps de partit
-    > Temps de descans
-    > Cada quant volem pista buida
-    > Temps entre partits
 - Crear partits sense slot asignat, crear slots a base de dades, calular millor slots possible per partit i poder fer drag an drop per ordenar.
-- Poder fer alta d'equips
-- Marcar partits com: Lliga, fora competició (o amistos), play-off (per finals i semis)
-- Marcar si un grup fa anada i tornada o no
 - Poder afegir partits a mà. Alguns partits entre grups diferents, per exemple Abs Mac vs Abs Fem
+- Marcar partits com: Lliga, fora competició (o amistos), play-off (per finals i semis)
+- Poder fer alta d'equips (formulari de inscripcio)
 - Dur actes partits
-
-## TODO list
-- Simplificar pistes a pista 1 i pista 2
-- Millorar generacio d'horaris
-- Gestio de "hores prohibides". Equip tal no pot jugar a aquesta franja.

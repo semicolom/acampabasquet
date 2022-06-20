@@ -1,4 +1,4 @@
-django<4
+django<5
 gevent<20.12  # 20.12 fails on installation on server
 gunicorn<21
 
@@ -18,3 +18,5 @@ django-tools-seo  # https://github.com/semicolom/django-tools-seo
 
 # Testing fake data
 faker
+
+django-admin-sortable2

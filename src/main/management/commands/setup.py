@@ -2,7 +2,7 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from main.models import Team, INF, CAD, JUN, SEN, VET, MASC, FEM, MIX, Match
+from main.models import CAD, FEM, INF, JUN, MIX, SEN, VET, MASC, Team, Group, Match
 
 
 class Command(BaseCommand):
@@ -15,6 +15,7 @@ class Command(BaseCommand):
     def clean_previous_year(self):
         Match.objects.all().delete()
         Team.objects.all().delete()
+        Group.objects.all().delete()
 
     def import_teams(self):
         with open(self.csv_file) as csvfile:

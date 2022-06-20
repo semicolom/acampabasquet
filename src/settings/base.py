@@ -43,7 +43,8 @@ INSTALLED_APPS = [
 
     # Third party
     'django_extensions',
-    'merged_inlines',
+    'adminsortable2',
+    # 'merged_inlines',
 ]
 
 MIDDLEWARE = [
