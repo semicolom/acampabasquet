@@ -13,12 +13,13 @@
                 <div class="col-md-12">
                     {% with group.team_set.all as teams %}
                         {% if teams %}
-                            <h3>Resultats</h3>
+                            <h3>Classificació</h3>
                             <div class="table-responsive">
                                 <table class="table table-dark table-hover text-nowrap">
                                     <thead>
                                         <tr>
                                             <th scope="col">Equip</th>
+                                            <th scope="col">Punts</th>
                                             <th scope="col">Partits jugats</th>
                                             <th scope="col">Partits guanyats</th>
                                             <th scope="col">Partits perduts</th>
@@ -30,6 +31,7 @@
                                         {% for team in group.team_set.all %}
                                             <tr>
                                                 <td><a href="{% url 'team' team.id %}">{{ team.name }}</a></td>
+                                                <td>{{ team.competition_points }}</td>
                                                 <td>{{ team.games_played }}</td>
                                                 <td>{{ team.games_won }}</td>
                                                 <td>{{ team.games_lost }}</td>

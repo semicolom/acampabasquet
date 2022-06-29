@@ -172,3 +172,8 @@ SITE_NAME = "Acampabàsquet"
 
 # Google Analytics
 GOOGLE_ANALYTICS_TRACKING_ID = env('DJANGO_GOOGLE_ANALYTICS_TRACKING_ID', default=None)
+
+# Config
+AVAILABLE_FIELDS = 2  # Matches at the same time
+START_DATETIME = "2022-07-01 19:00"
+MATCH_LENGTH = 20  # In minutes

@@ -72,7 +72,30 @@ Si un equip no se presenta, marcar partit com 23 a 0 a favor del equip presentat
 
 ## Millores futures
 - Crear partits sense slot asignat, crear slots a base de dades, calular millor slots possible per partit i poder fer drag an drop per ordenar.
-- Poder afegir partits a mà. Alguns partits entre grups diferents, per exemple Abs Mac vs Abs Fem
 - Marcar partits com: Lliga, fora competició (o amistos), play-off (per finals i semis)
 - Poder fer alta d'equips (formulari de inscripcio)
 - Dur actes partits
+
+
+## Edicio 2022
+Grup de 3, 2 voltes -> 6 partits
+Grup de 4, 1 volta -> 6 partits
+Grup de 4, 2 voltes -> 8 partits
+Grup de 5, 1 volta -> 10 partits
+
+Final four -> 3 partits
+1rs vs 2ns -> 2 partits 
+
+### Grups
+
+24h dona per a 144 partits.
+N'hauriem de generar uns 100 partits per acabar sobre les 12:00 del dia seguent.
+
+
+- Grup mini mixte: 7 equips, 1 volta -> 21 partits
+- Grup inf/cad masc: 4 equips, 2 voltes -> 8 partits
+- Grup inf/cad fem: 5 equips, 1 volta -> 10 partits
+- Grup jun/sen masc: 6 equips, 1 volta -> 6 partits
+- Grup jun/sen fem 1: 4 equips, 2 volta -> 8 partits
+- Grup jun/sen fem 2: 4 equips, 2 volta -> 8 partits
+

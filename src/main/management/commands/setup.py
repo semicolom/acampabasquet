@@ -2,15 +2,16 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from main.models import CAD, FEM, INF, JUN, MIX, SEN, VET, MASC, Team, Group, Match
+from main.models import CAD, FEM, INF, JUN, MIX, SEN, VET, MASC, MINI, Team, Group, Match
 
 
 class Command(BaseCommand):
-    csv_file = "equips.csv"
+    csv_file = "../equips.csv"
 
     def handle(self, *args, **options):
         self.clean_previous_year()
         self.import_teams()
+        self.create_mini_teams()
 
     def clean_previous_year(self):
         Match.objects.all().delete()
@@ -24,7 +25,6 @@ class Command(BaseCommand):
 
             teams = []
             for row in reader:
-                print(row)
                 teams.append(
                     Team(
                         name=row[1],
@@ -54,3 +54,19 @@ class Command(BaseCommand):
             'FEMENÍ': FEM,
             'MIXTE': MIX,
         }.get(csv_modality)
+
+    def create_mini_teams(self):
+        """
+        7 equipos mini mixtos.
+        """
+
+        teams = []
+        for index in range(1, 8):
+            teams.append(
+                Team(
+                    name=f"Equip Mini {index}",
+                    category=MINI,
+                    modality=MIX,
+                )
+            )
+        Team.objects.bulk_create(teams)
