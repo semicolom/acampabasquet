@@ -1,4 +1,4 @@
-django<3
+django<5
 gevent<20.12  # 20.12 fails on installation on server
 gunicorn<21
 
@@ -13,11 +13,10 @@ bpython
 # Manage enviroment variables
 django-environ  # https://github.com/joke2k/django-environ
 
-# Admin improvements
-django-merged-inlines  # https://github.com/MattBroach/Django-Merged-Inlines
-
 # SEO utils
 django-tools-seo  # https://github.com/semicolom/django-tools-seo
 
 # Testing fake data
 faker
+
+django-admin-sortable2

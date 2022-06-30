@@ -2,49 +2,67 @@ import csv
 import sys
 
 from django.contrib import admin, messages
+from django.db.models import Q
+from django.forms.models import BaseInlineFormSet
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path
 
-from merged_inlines.admin import MergedInlineAdmin
+from adminsortable2.admin import SortableAdminMixin
 
 from main.forms import MatchForm
 from main.services import Schedule
 
-from . import models
 from .forms import GroupsForm
+from .models import Team, Group, Match, TeamForbiddenSlot
 
 
-class TeamInline(admin.TabularInline):
-    model = models.Team
+class TeamForbiddenSlotInline(admin.TabularInline):
+    model = TeamForbiddenSlot
+    extra = 1
+
+
+class MatchInlineFormSet(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.queryset = Match.objects.filter(
+            Q(home_team=self.instance)
+            | Q(away_team=self.instance))
+
+
+class MatchInline(admin.TabularInline):
+    model = Match
+    fk_name = 'home_team'
+    formset = MatchInlineFormSet
     extra = 0
-
-    readonly_fields = [
+    fields = [
         'name',
-        'category',
-        'modality',
-        'points',
-        'points_against',
-        'games_played',
-        'games_won',
-        'games_lost',
+        'home_team',
+        'home_team_points',
+        'away_team',
+        'away_team_points',
+        'match_type',
+        'get_start_time',
+        'get_field',
     ]
 
+    readonly_fields = [
+        'get_start_time',
+        'get_field',
+    ]
 
-class MatchHomeInline(admin.TabularInline):
-    model = models.Match
-    extra = 0
-    fk_name = 'home_team'
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request, obj):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
-class MatchAwayInline(admin.TabularInline):
-    model = models.Match
-    extra = 0
-    fk_name = 'away_team'
-
-
-@admin.register(models.Team)
-class TeamAdmin(MergedInlineAdmin):
+@admin.register(Team)
+class TeamAdmin(admin.ModelAdmin):
     list_display = [
         '__str__',
         'category',
@@ -55,21 +73,12 @@ class TeamAdmin(MergedInlineAdmin):
         'games_played',
         'games_won',
         'games_lost',
+        'competition_points',
     ]
 
     inlines = [
-        MatchHomeInline,
-        MatchAwayInline,
-    ]
-
-    merged_field_order = [
-        'name',
-        'home_team_points',
-        'away_team_points',
-        'start_time',
-        'game_field',
-        'home_team',
-        'away_team',
+        # TeamForbiddenSlotInline,
+        MatchInline,
     ]
 
     readonly_fields = [
@@ -78,6 +87,7 @@ class TeamAdmin(MergedInlineAdmin):
         'games_played',
         'games_won',
         'games_lost',
+        'competition_points',
     ]
 
     list_filter = [
@@ -133,19 +143,37 @@ class TeamAdmin(MergedInlineAdmin):
     add_teams.short_description = "Afegir equips seleccionats a un grup"
 
 
-@admin.register(models.Group)
+class TeamInline(admin.TabularInline):
+    model = Team
+    extra = 0
+
+    fields = [
+        'name',
+        'category',
+        'modality',
+        'points',
+        'points_against',
+        'games_played',
+        'games_won',
+        'games_lost',
+    ]
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     list_display = [
         '__str__',
-        'category',
-        'modality',
-        'double_round',
+        'competition_type',
     ]
 
     list_filter = [
-        'category',
-        'modality',
-        'double_round',
+        'competition_type',
     ]
 
     search_fields = [
@@ -157,31 +185,21 @@ class GroupAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(models.Field)
-class FieldAdmin(admin.ModelAdmin):
-    list_display = [
-        '__str__',
-        'for_finals',
-    ]
-
-
-@admin.register(models.Match)
-class MatchAdmin(admin.ModelAdmin):
+@admin.register(Match)
+class MatchAdmin(SortableAdminMixin, admin.ModelAdmin):
     form = MatchForm
     change_list_template = "main/admin/matches_changelist.html"
     list_per_page = sys.maxsize
 
     list_display = [
+        'my_order',
         '__str__',
-        'available_field',
+        'get_group',
         'home_team_points',
         'away_team_points',
-        'start_time',
-        'game_field',
-    ]
-
-    list_filter = [
-        'game_field',
+        'get_start_time',
+        'get_game_field',
+        'match_type',
     ]
 
     search_fields = [
@@ -191,9 +209,44 @@ class MatchAdmin(admin.ModelAdmin):
     ]
 
     actions = [
-        'swap_matches',
         'export_as_csv',
     ]
+
+    list_filter = [
+        'match_type',
+    ]
+
+    fields = [
+        'name',
+        'match_type',
+        'home_team',
+        'home_team_points',
+        'away_team',
+        'away_team_points',
+        'my_order',
+        'get_group',
+        'get_start_time',
+        'get_game_field',
+    ]
+
+    readonly_fields = [
+        'my_order',
+        'get_group',
+        'get_start_time',
+        'get_game_field',
+    ]
+
+    def get_group(self, obj: Match):
+        return obj.group or "-"
+    get_group.short_description = "Grup"
+
+    def get_start_time(self, obj: Match):
+        return obj.get_start_time()
+    get_start_time.short_description = "Hora de joc"
+
+    def get_game_field(self, obj: Match):
+        return obj.get_field()
+    get_game_field.short_description = "Pista"
 
     def get_urls(self):
         urls = super().get_urls()
@@ -205,31 +258,13 @@ class MatchAdmin(admin.ModelAdmin):
         return my_urls
 
     def create_schedule(self, request):
-        if models.Match.objects.all().exists():
+        if Match.objects.all().exists():
             self.message_user(request, "Ja hi ha partits creats", level=messages.ERROR)
         else:
             Schedule().create_schedule()
             self.message_user(request, "S'han creat tots els partits")
 
         return HttpResponseRedirect("../")
-
-    def swap_matches(self, request, queryset):
-        if queryset.count() != 2:
-            self.message_user(request, "S'han de seleccionar només 2 equips", level=messages.ERROR)
-            return HttpResponseRedirect(request.get_full_path())
-
-        m1 = queryset[0]
-        m2 = queryset[1]
-
-        m1.name, m1.home_team, m1.away_team, m2.name, m2.home_team, m2.away_team = \
-            m2.name, m2.home_team, m2.away_team, m1.name, m1.home_team, m1.away_team
-
-        m1.save()
-        m2.save()
-
-        self.message_user(request, "Partits intercanviats correctament")
-        return HttpResponseRedirect(request.get_full_path())
-    swap_matches.short_description = "Intercanviar partits"
 
     def export_as_csv(self, request, queryset):
         meta = self.model._meta
@@ -245,8 +280,3 @@ class MatchAdmin(admin.ModelAdmin):
 
         return response
     export_as_csv.short_description = "Exportar a CSV"
-
-    def available_field(self, obj):
-        return not obj.home_team and not obj.away_team
-    available_field.short_description = "Pista disponible"
-    available_field.boolean = True

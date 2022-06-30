@@ -1,99 +1,92 @@
-import random
-
 from django.core.management.base import BaseCommand
 
-from faker import Faker
-
-from main.models import ABS, CAD, FEM, INF, MASC, CATEGORIES, MODALITIES, Team, Field, Group, Match
+from main.models import FEM, INF, MIX, SEN, MASC, MINI, DOUBLE, Team, Group, Match
 
 
 class Command(BaseCommand):
     help = "Creates test fields, groups and teams"
 
+    def handle(self, *args, **options):
+        self.clear()
+        self.create_groups_and_teams()
+
     def clear(self):
         Match.objects.all().delete()
         Group.objects.all().delete()
         Team.objects.all().delete()
-        Field.objects.all().delete()
 
-    @staticmethod
-    def create_fields():
-        Field.objects.create(
-            name="Pista 1",
+    def create_groups_and_teams(self):
+        # Mini, 7 equips, nomes anada
+        group_mini = Group.objects.create(
+            name="Grup mini",
         )
-        Field.objects.create(
-            name="Pista 2",
-        )
-        Field.objects.create(
-            name="Pista central",
-            for_finals=True,
+        for index in range(1, 8):
+            Team.objects.create(
+                name=f"Equip Mini {index}",
+                category=MINI,
+                modality=MIX,
+                group=group_mini,
+            )
 
+        # Inf/Cad masc, 4 equips, anada i tornada
+        group_inf_cad_masc = Group.objects.create(
+            name="Grup Inf/Cad masc",
+            competition_type=DOUBLE,
         )
+        for index in range(1, 5):
+            Team.objects.create(
+                name=f"Equip Inf/Cad masc {index}",
+                category=INF,
+                modality=MASC,
+                group=group_inf_cad_masc,
+            )
 
-    def create_groups(self):
-        # INF
-        Group.objects.create(
-            category=INF,
-            modality=MASC,
+        # Inf/Cad fem, 5 equips, anada
+        group_inf_cad_fem = Group.objects.create(
+            name="Grup Inf/Cad fem",
         )
-        Group.objects.create(
-            category=INF,
-            modality=FEM,
+        for index in range(1, 6):
+            Team.objects.create(
+                name=f"Equip Inf/Cad fem {index}",
+                category=INF,
+                modality=FEM,
+                group=group_inf_cad_fem,
+            )
+
+        # Jun/sen masc, 6 equips, anada
+        group_jun_sen_masc = Group.objects.create(
+            name="Jun/sen masc",
         )
+        for index in range(1, 7):
+            Team.objects.create(
+                name=f"Jun/sen masc {index}",
+                category=SEN,
+                modality=MASC,
+                group=group_jun_sen_masc,
+            )
 
-        # CAD
-        Group.objects.create(
-            category=CAD,
-            modality=MASC,
+        # Jun/sen fem 1, 4 equips, anada i tornada
+        group_jun_sen_fem_1 = Group.objects.create(
+            name="Jun/sen fem 1",
+            competition_type=DOUBLE,
         )
-        Group.objects.create(
-            category=CAD,
-            modality=FEM,
+        for index in range(1, 5):  # 4 equips
+            Team.objects.create(
+                name=f"Jun/sen fem {index}",
+                category=SEN,
+                modality=FEM,
+                group=group_jun_sen_fem_1,
+            )
+
+        # Jun/sen fem 2, 4 equips, anada
+        group_jun_sen_fem_2 = Group.objects.create(
+            name="Jun/sen fem 2",
+            competition_type=DOUBLE,
         )
-
-        # ABS
-        Group.objects.create(
-            name="Absoluta masculina grup 1",
-            category=ABS,
-            modality=MASC,
-        )
-        Group.objects.create(
-            name="Absoluta masculina grup 2",
-            category=ABS,
-            modality=MASC,
-        )
-        Group.objects.create(
-            name="Absoluta femenina",
-            category=ABS,
-            modality=FEM,
-        )
-
-    def create_teams(self):
-        category_index = 0
-        modality_index = 0
-
-        fake = Faker('dk_DK')
-
-        for category in CATEGORIES:
-            for modality in MODALITIES:
-                grups = Group.objects.filter(
-                    category=category[0],
-                    modality=modality[0],
-                )
-                for group in grups:
-                    for index in range(1, random.randint(4, 9)):
-                        Team.objects.create(
-                            name=fake.name().split()[1],
-                            category=category[0],
-                            modality=modality[0],
-                            group=group,
-                        )
-                modality_index += 1
-            category_index += 1
-
-    def handle(self, *args, **options):
-        self.clear()
-
-        self.create_fields()
-        self.create_groups()
-        self.create_teams()
+        for index in range(6, 10):  # 4 equips
+            Team.objects.create(
+                name=f"Jun/sen fem {index}",
+                category=SEN,
+                modality=FEM,
+                group=group_jun_sen_fem_2,
+            )

@@ -43,8 +43,8 @@ INSTALLED_APPS = [
 
     # Third party
     'django_extensions',
-    'merged_inlines',
-    'djtools.seo',
+    'adminsortable2',
+    # 'merged_inlines',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +72,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'djtools.seo.context_processors.google_analytics',
                 'main.context_processors.settings_context',
             ],
         },
@@ -112,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-LANGUAGE_CODE = 'CA'
+LANGUAGE_CODE = 'ca'
 
 TIME_ZONE = 'Europe/Madrid'
 
@@ -122,6 +121,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
@@ -172,3 +172,8 @@ SITE_NAME = "Acampabàsquet"
 
 # Google Analytics
 GOOGLE_ANALYTICS_TRACKING_ID = env('DJANGO_GOOGLE_ANALYTICS_TRACKING_ID', default=None)
+
+# Config
+AVAILABLE_FIELDS = 2  # Matches at the same time
+START_DATETIME = "2022-07-01 19:00"
+MATCH_LENGTH = 20  # In minutes
