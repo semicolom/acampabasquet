@@ -20,7 +20,7 @@ clean:
 	@rm -f $(ARTIFACT)
 
 requirements:
-	python3.10 -m virtualenv temp_venv
+	virtualenv -p python3.6 temp_venv
 	$(TMP_PIP) install -U "pip"
 	$(TMP_PIP) install -r $(REQUIREMENTS_BASE)
 	$(TMP_PIP) freeze > requirements/requirements.txt
@@ -28,7 +28,7 @@ requirements:
 	@rm -rf temp_venv
 
 virtualenv_base:
-	test -d venv || python3.10 -m virtualenv venv
+	test -d venv || virtualenv -p python3.6 venv
 	$(PIP) install -U "pip"
 
 virtualenv: virtualenv_base
