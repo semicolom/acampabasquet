@@ -23,6 +23,8 @@
                                 <td>
                                     {% if match.home_team and match.away_team %}
                                         <a href="{% url 'team' match.home_team.id %}">{{ match.home_team.name }}</a> vs <a href="{% url 'team' match.away_team.id %}">{{ match.away_team.name }}</a>{% if match.name %} ({{ match.name }}){% endif %}</td>
+                                    {% else %}
+                                        {{ match.name }}
                                     {% endif %}
                                 <td>{{ match.home_team_points }} - {{ match.away_team_points }}</td>
                                 {% if not group %}

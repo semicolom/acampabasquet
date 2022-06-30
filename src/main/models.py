@@ -285,7 +285,7 @@ class Match(models.Model):
                 return f"{teams_string} ({self.name})"
             return teams_string
 
-        return "-"
+        return self.name or "-"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
