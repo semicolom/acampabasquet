@@ -18,7 +18,7 @@ class Command(BaseCommand):
     def create_groups_and_teams(self):
         # Mini, 7 equips, nomes anada
         group_mini = Group.objects.create(
-            name=f"Grup mini",
+            name="Grup mini",
         )
         for index in range(1, 8):
             Team.objects.create(
@@ -30,7 +30,7 @@ class Command(BaseCommand):
 
         # Inf/Cad masc, 4 equips, anada i tornada
         group_inf_cad_masc = Group.objects.create(
-            name=f"Grup Inf/Cad masc",
+            name="Grup Inf/Cad masc",
             competition_type=DOUBLE,
         )
         for index in range(1, 5):
@@ -43,7 +43,7 @@ class Command(BaseCommand):
 
         # Inf/Cad fem, 5 equips, anada
         group_inf_cad_fem = Group.objects.create(
-            name=f"Grup Inf/Cad fem",
+            name="Grup Inf/Cad fem",
         )
         for index in range(1, 6):
             Team.objects.create(
@@ -55,7 +55,7 @@ class Command(BaseCommand):
 
         # Jun/sen masc, 6 equips, anada
         group_jun_sen_masc = Group.objects.create(
-            name=f"Jun/sen masc",
+            name="Jun/sen masc",
         )
         for index in range(1, 7):
             Team.objects.create(
@@ -67,7 +67,7 @@ class Command(BaseCommand):
 
         # Jun/sen fem 1, 4 equips, anada i tornada
         group_jun_sen_fem_1 = Group.objects.create(
-            name=f"Jun/sen fem 1",
+            name="Jun/sen fem 1",
             competition_type=DOUBLE,
         )
         for index in range(1, 5):  # 4 equips
@@ -80,7 +80,7 @@ class Command(BaseCommand):
 
         # Jun/sen fem 2, 4 equips, anada
         group_jun_sen_fem_2 = Group.objects.create(
-            name=f"Jun/sen fem 2",
+            name="Jun/sen fem 2",
             competition_type=DOUBLE,
         )
         for index in range(6, 10):  # 4 equips
