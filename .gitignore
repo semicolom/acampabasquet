@@ -7,3 +7,4 @@ venv/
 .idea/
 
 *.sql
+db.json
