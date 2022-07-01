@@ -290,7 +290,11 @@ class Match(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
-        if self.home_team and self.away_team:
+        if (
+            self.home_team
+            and self.away_team
+            and (self.home_team_points != 0 or self.away_team_points != 0)
+        ):
             self.home_team.update_points()
             self.away_team.update_points()
 

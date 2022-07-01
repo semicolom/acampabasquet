@@ -89,21 +89,31 @@ class Schedule:
             if double_round:
                 # Amb anda i tornada
                 return [
+                    # Anada
                     [
                         (teams[0], teams[1]),
                         (teams[2], teams[3]),
                     ],
                     [
                         (teams[1], teams[2]),
-                        (teams[3], teams[0]),
+                        (teams[0], teams[3]),
                     ],
+                    [
+                        (teams[2], teams[0]),
+                        (teams[3], teams[1]),
+                    ],
+                    # Tornada
                     [
                         (teams[1], teams[0]),
                         (teams[3], teams[2]),
                     ],
                     [
                         (teams[2], teams[1]),
-                        (teams[0], teams[3]),
+                        (teams[3], teams[0]),
+                    ],
+                    [
+                        (teams[0], teams[2]),
+                        (teams[1], teams[3]),
                     ],
                 ]
 
