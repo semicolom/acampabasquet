@@ -192,13 +192,13 @@ class MatchAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_per_page = sys.maxsize
 
     list_display = [
-        'my_order',
         '__str__',
         'get_group',
         'home_team_points',
         'away_team_points',
         'get_start_time',
         'get_game_field',
+        'my_order',
         'match_type',
     ]
 
@@ -223,14 +223,12 @@ class MatchAdmin(SortableAdminMixin, admin.ModelAdmin):
         'home_team_points',
         'away_team',
         'away_team_points',
-        'my_order',
         'get_group',
         'get_start_time',
         'get_game_field',
     ]
 
     readonly_fields = [
-        'my_order',
         'get_group',
         'get_start_time',
         'get_game_field',
