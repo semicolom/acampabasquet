@@ -26,7 +26,7 @@
                                     {% else %}
                                         {{ match.name }}
                                     {% endif %}
-                                <td>{{ match.home_team_points }} - {{ match.away_team_points }}</td>
+                                <td>{{ match.get_score }}</td>
                                 {% if not group %}
                                     <td>
                                         {% if match.group %}

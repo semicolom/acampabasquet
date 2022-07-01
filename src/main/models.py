@@ -335,3 +335,6 @@ class Match(models.Model):
         """
 
         return (self.my_order % settings.AVAILABLE_FIELDS) + 1
+
+    def get_score(self):
+        return f"{self.home_team_points} - {self.away_team_points}"

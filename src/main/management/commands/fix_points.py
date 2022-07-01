@@ -1,8 +1,6 @@
-import random
-
 from django.core.management.base import BaseCommand
 
-from main.models import Match, Team
+from main.models import Team
 
 
 class Command(BaseCommand):

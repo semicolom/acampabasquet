@@ -6,11 +6,11 @@ from django.db.models import Q
 from django.forms.models import BaseInlineFormSet
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.template.defaultfilters import time
 from django.urls import path
 
 from adminsortable2.admin import SortableAdminMixin
 
-from main.forms import MatchForm
 from main.services import Schedule
 
 from .forms import GroupsForm
@@ -187,17 +187,15 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Match)
 class MatchAdmin(SortableAdminMixin, admin.ModelAdmin):
-    form = MatchForm
     change_list_template = "main/admin/matches_changelist.html"
     list_per_page = sys.maxsize
 
     list_display = [
         '__str__',
-        'get_group',
-        'home_team_points',
-        'away_team_points',
         'get_start_time',
         'get_game_field',
+        'get_score',
+        'get_group',
         'my_order',
         'match_type',
     ]
@@ -239,12 +237,16 @@ class MatchAdmin(SortableAdminMixin, admin.ModelAdmin):
     get_group.short_description = "Grup"
 
     def get_start_time(self, obj: Match):
-        return obj.get_start_time()
+        return time(obj.get_start_time(), "H:i")
     get_start_time.short_description = "Hora de joc"
 
     def get_game_field(self, obj: Match):
         return obj.get_field()
     get_game_field.short_description = "Pista"
+
+    def get_score(self, obj: Match):
+        return obj.get_score()
+    get_score.short_description = "Resultat"
 
     def get_urls(self):
         urls = super().get_urls()
