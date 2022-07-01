@@ -181,9 +181,15 @@ class Team(BaseModel):
         self.games_lost = 0
 
         played_matches = Match.objects.filter(
-            match_type=MATCH_TYPE_COMPETITION
-        ).filter(
-            Q(home_team=self) | Q(away_team=self)
+            Q(match_type=MATCH_TYPE_COMPETITION)
+            &
+            Q(home_team_points__gt=0)
+            &
+            Q(away_team_points__gt=0)
+            & Q(
+                Q(home_team=self)
+                | Q(away_team=self)
+            )
         ).distinct()
 
         self.games_played = len(played_matches)
