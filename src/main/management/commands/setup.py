@@ -2,16 +2,24 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from main.models import CAD, FEM, INF, JUN, MIX, SEN, VET, MASC, MINI, Team, Group, Match
+from main.constants import CAD, FEM, INF, JUN, MIX, SEN, VET, MASC, MINI
+from main.models import Team, Group, Match
 
 
 class Command(BaseCommand):
     csv_file = "../equips.csv"
 
+    ROW_INDEX_NAME = 1
+    ROW_INDEX_CONTACT_NAME = 2
+    ROW_INDEX_CONTACT_PHONE = 3
+    ROW_INDEX_CONTACT_EMAIL = 4
+    ROW_INDEX_CATEGORY = 5
+    ROW_INDEX_MODALITY = 6
+
     def handle(self, *args, **options):
         self.clean_previous_year()
         self.import_teams()
-        self.create_mini_teams()
+        # self.create_mini_teams()
 
     def clean_previous_year(self):
         Match.objects.all().delete()
@@ -27,12 +35,12 @@ class Command(BaseCommand):
             for row in reader:
                 teams.append(
                     Team(
-                        name=row[1],
-                        contact_name=row[2],
-                        contact_phone=row[3],
-                        contact_email=row[4],
-                        category=self.get_category(row[5]),
-                        modality=self.get_modality(row[6]),
+                        name=row[self.ROW_INDEX_NAME],
+                        contact_name=row[self.ROW_INDEX_CONTACT_NAME],
+                        contact_phone=row[self.ROW_INDEX_CONTACT_PHONE],
+                        contact_email=row[self.ROW_INDEX_CONTACT_EMAIL],
+                        category=self.get_category(row[self.ROW_INDEX_CATEGORY]),
+                        modality=self.get_modality(row[self.ROW_INDEX_MODALITY]),
                     )
                 )
             Team.objects.bulk_create(teams)

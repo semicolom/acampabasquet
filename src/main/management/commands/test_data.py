@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 
-from main.models import FEM, INF, MIX, SEN, MASC, MINI, DOUBLE, Team, Group, Match
+from main.constants import FEM, INF, MIX, SEN, MASC, MINI, DOUBLE
+from main.models import Team, Group, Match
 
 
 class Command(BaseCommand):

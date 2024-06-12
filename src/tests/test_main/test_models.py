@@ -5,6 +5,7 @@ from main.models import Match
 
 class MatchTest(TestCase):
     def test_get_start_time(self):
+        # FIXME
         match = Match.objects.create(my_order=0)
         self.assertEqual(str(match.get_start_time()), "2022-07-01 19:00:00")
 

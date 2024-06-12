@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     # Third party
     'django_extensions',
     'adminsortable2',
-    # 'merged_inlines',
+    'solo',
 ]
 
 MIDDLEWARE = [
@@ -164,8 +164,3 @@ SERVER_EMAIL = 'no-reply@3x324h.cat'
 
 # Constants
 SITE_NAME = "Acampabàsquet"
-
-# Config
-AVAILABLE_FIELDS = 2  # Matches at the same time
-START_DATETIME = "2022-07-01 19:00"
-MATCH_LENGTH = 20  # In minutes

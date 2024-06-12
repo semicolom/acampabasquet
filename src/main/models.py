@@ -1,56 +1,33 @@
 import datetime
 
-from django.conf import settings
 from django.db import models
 from django.db.models import Q
 
-MINI = 10
-INF = 20
-CAD = 30
-JUN = 50
-SEN = 60
-VET = 70
+from solo.models import SingletonModel
 
-CATEGORIES = [
-    (MINI, "Mini"),
-    (INF, "Infantil"),
-    (CAD, "Cadet"),
-    (JUN, "Junior"),
-    (SEN, "Senior"),
-    (VET, "Veterans"),
-]
+from main.constants import (
+    DOUBLE, SINGLE, CATEGORIES, MODALITIES, MATCH_TYPES, MATCH_TYPE_COMPETITION,
+    COMPETITION_TYPE_CHOICES,
+)
 
-MASC = 'masc'
-FEM = 'fem'
-MIX = 'mix'
 
-MODALITIES = [
-    (MASC, "Masculí"),
-    (FEM, "Femení"),
-    (MIX, "Mixte"),
-]
+class SiteConfiguration(SingletonModel):
+    available_fields = models.PositiveSmallIntegerField(
+        default=2,
+    )
+    start_datetime = models.DateTimeField(
+        default="2024-06-21 19:00",
+    )
+    match_length = models.PositiveSmallIntegerField(
+        default=20,
+        help_text="En minuts",
+    )
 
-SINGLE = 'single'
-DOUBLE = 'double'
+    def __str__(self):
+        return "Configuració"
 
-COMPETITION_TYPE_CHOICES = [
-    (SINGLE, "Partit unic"),
-    (DOUBLE, "Anada i tornada"),
-]
-
-GAME_FIELDS_CHOICES = [
-    (1, "Pista 1"),
-    (2, "Pista 2"),
-]
-
-MATCH_TYPE_COMPETITION = 'competition'
-MATCH_TYPE_FRIENDLY = 'friendly'
-MATCH_TYPE_FINAL = 'final'
-MATCH_TYPES = [
-    (MATCH_TYPE_COMPETITION, "Competició"),
-    (MATCH_TYPE_FRIENDLY, "Amistós"),
-    (MATCH_TYPE_FINAL, "Final"),
-]
+    class Meta:
+        verbose_name = "Configuració"
 
 
 class BaseModel(models.Model):
@@ -328,11 +305,10 @@ class Match(models.Model):
         # and so on...
         """
 
-        minutes = int(self.my_order / settings.AVAILABLE_FIELDS) * settings.MATCH_LENGTH
-        return datetime.datetime.strptime(
-            settings.START_DATETIME,
-            "%Y-%m-%d %H:%M",
-        ) + datetime.timedelta(minutes=minutes)
+        config = SiteConfiguration.get_solo()
+
+        minutes = int(self.my_order / config.available_fields) * config.match_length
+        return config.start_datetime + datetime.timedelta(minutes=minutes)
 
     def get_field(self):
         """
@@ -340,7 +316,9 @@ class Match(models.Model):
         Odd will be field 2
         """
 
-        return (self.my_order % settings.AVAILABLE_FIELDS) + 1
+        config = SiteConfiguration.get_solo()
+
+        return (self.my_order % config.available_fields) + 1
 
     def get_score(self):
         return f"{self.home_team_points} - {self.away_team_points}"

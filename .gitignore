@@ -1,10 +1,8 @@
 .pyc
 __pycache__/
-
 venv/
+backups/
 .coverage
-
 .idea/
-
 *.sql
 db.json
