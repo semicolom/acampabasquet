@@ -146,7 +146,7 @@ class TeamAdmin(admin.ModelAdmin):
 
 class TeamInline(admin.TabularInline):
     model = Team
-    extra = 0
+    extra = 1
 
     fields = [
         'name',

@@ -2,17 +2,17 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from main.constants import CAD, FEM, INF, JUN, MIX, SEN, VET, MASC, MINI
-from main.models import Team, Group, Match
+from main.constants import CAD, FEM, INF, JUN, MIX, SEN, MASC, MINI
+from main.models import Team, Group, Match, SiteConfiguration
 
 
 class Command(BaseCommand):
-    csv_file = "../equips.csv"
+    csv_file = "equips.csv"
 
-    ROW_INDEX_NAME = 1
-    ROW_INDEX_CONTACT_NAME = 2
-    ROW_INDEX_CONTACT_PHONE = 3
-    ROW_INDEX_CONTACT_EMAIL = 4
+    ROW_INDEX_NAME = 2
+    ROW_INDEX_CONTACT_NAME = 3
+    ROW_INDEX_CONTACT_PHONE = 4
+    ROW_INDEX_CONTACT_EMAIL = 1
     ROW_INDEX_CATEGORY = 5
     ROW_INDEX_MODALITY = 6
 
@@ -27,7 +27,9 @@ class Command(BaseCommand):
         Group.objects.all().delete()
 
     def import_teams(self):
-        with open(self.csv_file) as csvfile:
+        config = SiteConfiguration.get_solo()
+        file_path = config.teams_file.path
+        with open(file_path) as csvfile:
             reader = csv.reader(csvfile)
             next(reader, None)  # skip the headers
 
@@ -44,15 +46,15 @@ class Command(BaseCommand):
                     )
                 )
             Team.objects.bulk_create(teams)
+        self.stdout.write(self.style.SUCCESS(f"{Team.objects.count()} teams created!"))
 
     @staticmethod
     def get_category(csv_category):
         return {
-            'INFANTIL (2008/2009)': INF,
-            'CADET (2006/2007)': CAD,
-            'JUNIOR (2004/2005)': JUN,
-            'SENIOR (2003 i posteriors)': SEN,
-            'VETERANS (+40)': VET,
+            'INFANTIL (2010/2011)': INF,
+            'CADET (2008/2009)': CAD,
+            'JUNIOR (2006/2007)': JUN,
+            'SENIOR (2005 i posteriors)': SEN,
         }.get(csv_category)
 
     @staticmethod

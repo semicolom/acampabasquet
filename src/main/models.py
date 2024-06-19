@@ -13,14 +13,22 @@ from main.constants import (
 
 class SiteConfiguration(SingletonModel):
     available_fields = models.PositiveSmallIntegerField(
+        "Pistes disponibles",
         default=2,
     )
     start_datetime = models.DateTimeField(
+        "Data",
         default="2024-06-21 19:00",
     )
     match_length = models.PositiveSmallIntegerField(
+        "Durada d'un partit",
         default=20,
         help_text="En minuts",
+    )
+    teams_file = models.FileField(
+        "CSV amb els equips",
+        upload_to="teams",
+        blank=True,
     )
 
     def __str__(self):
