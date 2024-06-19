@@ -1,3 +1,4 @@
+import codecs
 import csv
 
 from django.core.management.base import BaseCommand
@@ -7,8 +8,6 @@ from main.models import Team, Group, Match, SiteConfiguration
 
 
 class Command(BaseCommand):
-    csv_file = "equips.csv"
-
     ROW_INDEX_NAME = 2
     ROW_INDEX_CONTACT_NAME = 3
     ROW_INDEX_CONTACT_PHONE = 4
@@ -29,7 +28,8 @@ class Command(BaseCommand):
     def import_teams(self):
         config = SiteConfiguration.get_solo()
         file_path = config.teams_file.path
-        with open(file_path) as csvfile:
+
+        with codecs.open(file_path, 'r', 'utf8') as csvfile:
             reader = csv.reader(csvfile)
             next(reader, None)  # skip the headers
 
