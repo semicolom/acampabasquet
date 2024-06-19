@@ -18,7 +18,7 @@ class SiteConfiguration(SingletonModel):
     )
     start_datetime = models.DateTimeField(
         "Data",
-        default="2024-06-21 19:00",
+        default=datetime.datetime.strptime("2024-06-21 19:00", "%Y-%m-%d %H:%M"),
     )
     match_length = models.PositiveSmallIntegerField(
         "Durada d'un partit",
