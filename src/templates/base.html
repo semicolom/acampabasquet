@@ -1,4 +1,6 @@
-{% load static %}
+{% load static solo_tags %}
+
+{% get_solo 'main.SiteConfiguration' as site_config %}
 
 <!DOCTYPE html>
 <html lang="ca">
@@ -47,6 +49,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'groups' %}">Grups</a>
                         </li>
+                        {% if site_config.rules_file %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ MEDIA_URL }}{{ site_config.rules_file }}" target="_blank">Normes generals</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

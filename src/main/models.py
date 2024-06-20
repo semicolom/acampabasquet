@@ -30,6 +30,11 @@ class SiteConfiguration(SingletonModel):
         upload_to="teams",
         blank=True,
     )
+    rules_file = models.FileField(
+        "Normes generals",
+        upload_to="rules",
+        blank=True,
+    )
 
     def __str__(self):
         return "Configuració"
