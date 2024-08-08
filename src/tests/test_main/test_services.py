@@ -1,6 +1,7 @@
 from django.test import TestCase
 
-from main.models import FEM, INF, MASC, DOUBLE, Team, Group, Match
+from main.constants import FEM, INF, MASC, DOUBLE
+from main.models import Team, Group, Match
 from main.services import Schedule
 
 

@@ -51,3 +51,9 @@ test: virtualenv
 	$(FLAKE8) src/
 	$(COVERAGE) run --source='src/' src/manage.py test src/
 	$(COVERAGE) report
+
+# Dumpdata
+# ./manage.py dumpdata --indent 4 --exclude auth.permission --exclude contenttypes --exclude sessions.session --exclude admin.logentry > ../backups/acampabasquet.json
+
+# Loaddata
+# ./manage.py loaddata ../backups/acampabasquet.json

@@ -1,7 +1,3 @@
-"""
-Django settings for acampabasquet project.
-"""
-
 import os
 
 import environ
@@ -12,7 +8,6 @@ env = environ.Env()
 env.read_env(str(root.path('.env')))
 
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('DJANGO_SECRET_KEY', default='dev')
 
 DEBUG = False
@@ -24,7 +19,7 @@ SITE_URL = '{0}{1}'.format(SITE_PROTOCOL, SITE_DOMAIN)
 ALLOWED_HOSTS = [SITE_DOMAIN]
 
 ADMINS = [
-    ('Toni Colom', 'toni@semicolom.com')
+    ('Toni Colom', 'tcolomquetglas@gmail.com')
 ]
 ADMIN_URL = env('DJANGO_ADMIN_URL', default='admin')
 
@@ -44,7 +39,7 @@ INSTALLED_APPS = [
     # Third party
     'django_extensions',
     'adminsortable2',
-    # 'merged_inlines',
+    'solo',
 ]
 
 MIDDLEWARE = [
@@ -165,15 +160,7 @@ EMAIL_PORT = env('DJANGO_EMAIL_PORT', default='')
 EMAIL_HOST_USER = env('DJANGO_EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = env('DJANGO_EMAIL_HOST_PASSWORD', default='')
 EMAIL_USE_TLS = True
-SERVER_EMAIL = 'no-reply@acampabasquet.com'
+SERVER_EMAIL = 'no-reply@3x324h.cat'
 
 # Constants
 SITE_NAME = "Acampabàsquet"
-
-# Google Analytics
-GOOGLE_ANALYTICS_TRACKING_ID = env('DJANGO_GOOGLE_ANALYTICS_TRACKING_ID', default=None)
-
-# Config
-AVAILABLE_FIELDS = 2  # Matches at the same time
-START_DATETIME = "2022-07-01 19:00"
-MATCH_LENGTH = 20  # In minutes

@@ -85,17 +85,3 @@ Grup de 5, 1 volta -> 10 partits
 
 Final four -> 3 partits
 1rs vs 2ns -> 2 partits 
-
-### Grups
-
-24h dona per a 144 partits.
-N'hauriem de generar uns 100 partits per acabar sobre les 12:00 del dia seguent.
-
-
-- Grup mini mixte: 7 equips, 1 volta -> 21 partits
-- Grup inf/cad masc: 4 equips, 2 voltes -> 8 partits
-- Grup inf/cad fem: 5 equips, 1 volta -> 10 partits
-- Grup jun/sen masc: 6 equips, 1 volta -> 6 partits
-- Grup jun/sen fem 1: 4 equips, 2 volta -> 8 partits
-- Grup jun/sen fem 2: 4 equips, 2 volta -> 8 partits
-

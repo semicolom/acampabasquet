@@ -134,6 +134,61 @@ class Schedule:
             ]
 
         if len(teams) == 5:
+            if double_round:
+                return [
+                    [
+                        (teams[0], teams[1]),
+                        (teams[2], teams[3]),
+                        # teams[4] rests
+                    ],
+                    [
+                        (teams[4], teams[0]),
+                        (teams[1], teams[2]),
+                        # teams[3] rests
+                    ],
+                    [
+                        (teams[4], teams[3]),
+                        (teams[0], teams[2]),
+                        # teams[1] rests
+                    ],
+                    [
+                        (teams[1], teams[4]),
+                        (teams[3], teams[0]),
+                        # teams[2] rests
+                    ],
+                    [
+                        (teams[2], teams[4]),
+                        (teams[3], teams[1]),
+                        # teams[0] rests
+                    ],
+                    # 2nd Round
+                    [
+                        (teams[0], teams[1]),
+                        (teams[2], teams[3]),
+                        # teams[4] rests
+                    ],
+                    [
+                        (teams[4], teams[0]),
+                        (teams[1], teams[2]),
+                        # teams[3] rests
+                    ],
+                    [
+                        (teams[4], teams[3]),
+                        (teams[0], teams[2]),
+                        # teams[1] rests
+                    ],
+                    [
+                        (teams[1], teams[4]),
+                        (teams[3], teams[0]),
+                        # teams[2] rests
+                    ],
+                    [
+                        (teams[2], teams[4]),
+                        (teams[3], teams[1]),
+                        # teams[0] rests
+                    ],
+                ]
+
             return [
                 [
                     (teams[0], teams[1]),

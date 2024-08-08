@@ -1,22 +1,14 @@
-django<4
-gevent<20.12  # 20.12 fails on installation on server
-gunicorn<21
-
-# PostgreSQL - Python
+# python
+gevent<23
+gunicorn<22
 psycopg2<2.9  # 2.9.1 Fails on pip install
-
-# A better shell
-django-extensions<4
 curtsies<0.3.5  # 0.3.6 fails on installation on server
 bpython
-
-# Manage enviroment variables
-django-environ  # https://github.com/joke2k/django-environ
-
-# SEO utils
-django-tools-seo  # https://github.com/semicolom/django-tools-seo
-
-# Testing fake data
 faker
 
-django-admin-sortable2
+# django
+django<4
+django-environ  # https://github.com/joke2k/django-environ
+django-extensions<4
+django-admin-sortable2<2
+django-solo<3

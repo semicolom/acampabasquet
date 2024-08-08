@@ -10,11 +10,12 @@ from django.template.defaultfilters import time
 from django.urls import path
 
 from adminsortable2.admin import SortableAdminMixin
+from solo.admin import SingletonModelAdmin
 
 from main.services import Schedule
 
 from .forms import GroupsForm
-from .models import Team, Group, Match, TeamForbiddenSlot
+from .models import Team, Group, Match, SiteConfiguration, TeamForbiddenSlot
 
 
 class TeamForbiddenSlotInline(admin.TabularInline):
@@ -145,7 +146,7 @@ class TeamAdmin(admin.ModelAdmin):
 
 class TeamInline(admin.TabularInline):
     model = Team
-    extra = 0
+    extra = 1
 
     fields = [
         'name',
@@ -280,3 +281,6 @@ class MatchAdmin(SortableAdminMixin, admin.ModelAdmin):
 
         return response
     export_as_csv.short_description = "Exportar a CSV"
+
+
+admin.site.register(SiteConfiguration, SingletonModelAdmin)
