@@ -292,4 +292,184 @@ class Schedule:
                 ],
             ]
 
+        if len(teams) == 8:
+            return [
+                [
+                    (teams[0], teams[1]),
+                    (teams[2], teams[3]),
+                    (teams[4], teams[5]),
+                    (teams[6], teams[7]),
+                ],
+                [
+                    (teams[0], teams[2]),
+                    (teams[1], teams[7]),
+                    (teams[3], teams[5]),
+                    (teams[4], teams[6]),
+                ],
+                [
+                    (teams[0], teams[3]),
+                    (teams[1], teams[6]),
+                    (teams[2], teams[7]),
+                    (teams[4], teams[5]),
+                ],
+                [
+                    (teams[0], teams[4]),
+                    (teams[1], teams[5]),
+                    (teams[2], teams[6]),
+                    (teams[3], teams[7]),
+                ],
+                [
+                    (teams[0], teams[5]),
+                    (teams[1], teams[4]),
+                    (teams[2], teams[7]),
+                    (teams[3], teams[6]),
+                ],
+                [
+                    (teams[0], teams[6]),
+                    (teams[1], teams[3]),
+                    (teams[2], teams[5]),
+                    (teams[4], teams[7]),
+                ],
+                [
+                    (teams[0], teams[7]),
+                    (teams[1], teams[2]),
+                    (teams[3], teams[4]),
+                    (teams[5], teams[6]),
+                ],
+            ]
+
+        if len(teams) == 9:
+            return [
+                [
+                    (teams[0], teams[1]),
+                    (teams[2], teams[3]),
+                    (teams[4], teams[5]),
+                    (teams[6], teams[7]),
+                    # teams[8] rests
+                ],
+                [
+                    (teams[8], teams[0]),
+                    (teams[1], teams[2]),
+                    (teams[3], teams[4]),
+                    (teams[5], teams[6]),
+                    # teams[7] rests
+                ],
+                [
+                    (teams[7], teams[8]),
+                    (teams[0], teams[2]),
+                    (teams[1], teams[3]),
+                    (teams[4], teams[6]),
+                    # teams[5] rests
+                ],
+                [
+                    (teams[5], teams[7]),
+                    (teams[8], teams[1]),
+                    (teams[0], teams[3]),
+                    (teams[2], teams[4]),
+                    # teams[6] rests
+                ],
+                [
+                    (teams[6], teams[5]),
+                    (teams[7], teams[0]),
+                    (teams[8], teams[2]),
+                    (teams[1], teams[4]),
+                    # teams[3] rests
+                ],
+                [
+                    (teams[3], teams[6]),
+                    (teams[5], teams[8]),
+                    (teams[0], teams[4]),
+                    (teams[2], teams[7]),
+                    # teams[1] rests
+                ],
+                [
+                    (teams[1], teams[3]),
+                    (teams[6], teams[0]),
+                    (teams[4], teams[8]),
+                    (teams[2], teams[5]),
+                    # teams[7] rests
+                ],
+                [
+                    (teams[7], teams[1]),
+                    (teams[3], teams[2]),
+                    (teams[0], teams[5]),
+                    (teams[8], teams[6]),
+                    # teams[4] rests
+                ],
+                [
+                    (teams[4], teams[7]),
+                    (teams[1], teams[6]),
+                    (teams[3], teams[5]),
+                    (teams[0], teams[8]),
+                    # teams[2] rests
+                ],
+            ]
+
+        if len(teams) == 10:
+            return [
+                [
+                    (teams[0], teams[1]),
+                    (teams[2], teams[3]),
+                    (teams[4], teams[5]),
+                    (teams[6], teams[7]),
+                    (teams[8], teams[9]),
+                ],
+                [
+                    (teams[0], teams[2]),
+                    (teams[1], teams[9]),
+                    (teams[3], teams[8]),
+                    (teams[4], teams[7]),
+                    (teams[5], teams[6]),
+                ],
+                [
+                    (teams[0], teams[3]),
+                    (teams[1], teams[8]),
+                    (teams[2], teams[9]),
+                    (teams[4], teams[6]),
+                    (teams[5], teams[7]),
+                ],
+                [
+                    (teams[0], teams[4]),
+                    (teams[1], teams[7]),
+                    (teams[2], teams[6]),
+                    (teams[3], teams[5]),
+                    (teams[8], teams[9]),
+                ],
+                [
+                    (teams[0], teams[5]),
+                    (teams[1], teams[6]),
+                    (teams[2], teams[4]),
+                    (teams[3], teams[9]),
+                    (teams[7], teams[8]),
+                ],
+                [
+                    (teams[0], teams[6]),
+                    (teams[1], teams[5]),
+                    (teams[2], teams[7]),
+                    (teams[3], teams[4]),
+                    (teams[8], teams[9]),
+                ],
+                [
+                    (teams[0], teams[7]),
+                    (teams[1], teams[4]),
+                    (teams[2], teams[5]),
+                    (teams[3], teams[6]),
+                    (teams[8], teams[9]),
+                ],
+                [
+                    (teams[0], teams[8]),
+                    (teams[1], teams[3]),
+                    (teams[2], teams[7]),
+                    (teams[4], teams[9]),
+                    (teams[5], teams[6]),
+                ],
+                [
+                    (teams[0], teams[9]),
+                    (teams[1], teams[2]),
+                    (teams[3], teams[7]),
+                    (teams[4], teams[8]),
+                    (teams[5], teams[6]),
+                ],
+            ]
+
         raise NotImplementedError
