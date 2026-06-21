@@ -7,8 +7,9 @@ class Schedule:
     def create_schedule(self):
         matches = []
         group_rounds = {}
+        groups = sorted(Group.objects.all(), key=lambda g: g.amount_of_matches, reverse=True)
 
-        for group in Group.objects.all():
+        for group in groups:
             group_rounds[group.id] = self.get_match_combinations(
                 teams=group.team_set.all(),
                 double_round=group.double_round,
@@ -19,7 +20,7 @@ class Schedule:
         order = 0
 
         while round_index < max_length:
-            for group in Group.objects.all():
+            for group in groups:
                 rounds = group_rounds.get(group.id)
                 max_length = max(max_length, len(rounds))
 
