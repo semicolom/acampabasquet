@@ -170,7 +170,9 @@ class TeamInline(admin.TabularInline):
 class GroupAdmin(admin.ModelAdmin):
     list_display = [
         '__str__',
+        'amount_of_teams',
         'competition_type',
+        'amount_of_matches',
     ]
 
     list_filter = [

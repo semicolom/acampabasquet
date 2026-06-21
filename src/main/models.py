@@ -83,6 +83,19 @@ class Group(BaseModel):
     def double_round(self):
         return self.competition_type == DOUBLE
 
+    @property
+    def amount_of_teams(self):
+        return self.team_set.count()
+
+    @property
+    def amount_of_matches(self):
+        amount_of_teams = self.amount_of_teams
+
+        amount_of_matches = amount_of_teams * (amount_of_teams - 1) / 2
+        if self.double_round:
+            amount_of_matches *= 2
+
+        return int(amount_of_matches)
 
 class Team(BaseModel):
     name = models.CharField(
