@@ -6,29 +6,12 @@ This app will manage a 24 hours basketball championship
 
 Make sure you have installed in your OS
 ```
-make
-python3.6
-virtualenv
-postgresql
-```
-
-Create a PostgreSQL database
-```
-sudo su - postgres
-psql
-CREATE DATABASE acampabasquet;
-CREATE USER acampabasquet WITH PASSWORD 'acampabasquet';
-GRANT ALL PRIVILEGES ON DATABASE "acampabasquet" TO acampabasquet;
-ALTER USER acampabasquet CREATEDB;
+docker
 ```
 
 Then run:
 ```
-make requirements
-make virtualenv
-source venv/bin/activate
-cd src/
-./manage.py migrate
+docker-compose up --build
 ```
 
 ## Run tests
