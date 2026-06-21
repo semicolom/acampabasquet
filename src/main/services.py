@@ -5,17 +5,6 @@ from .models import Team, Group, Match
 
 class Schedule:
     def create_schedule(self):
-        """
-        - TODO: Es grup mini ha de jugar tota la lliga al principi
-        - Un equip no pot jugar dos partits molt seguits
-        - Un equip no pot estar molt de temps sense jugar
-        - Un equip hauria de jugar partits separats minim 2h i maxim 3h30min
-
-        - Primer grups amb més partits (així evitam que grups amb pocs partits
-            juguin molt prest i hagin d'esperar 8h per ses finals)
-        - Grups amb menos partits haurien de tenir més temps de descans
-        """
-
         matches = []
         group_rounds = {}
 
@@ -58,418 +47,55 @@ class Schedule:
         teams: List[Team],
         double_round: bool = False
     ) -> List[List[tuple]]:
+        teams_list = list(teams)
+        amount_of_teams = len(teams_list)
 
-        if len(teams) == 3:
-            if double_round:
-                # Amb anda i tornada
-                return [
-                    [
-                        (teams[0], teams[1]),  # teams[2] rests
-                    ],
-                    [
-                        (teams[2], teams[0]),  # teams[1] rests
-                    ],
-                    [
-                        (teams[1], teams[2]),  # teams[0] rests
-                    ],
-                    [
-                        (teams[1], teams[0]),  # teams[2] rests
-                    ],
-                    [
-                        (teams[0], teams[2]),  # teams[1] rests
-                    ],
-                    [
-                        (teams[2], teams[1]),  # teams[0] rests
-                    ],
-                ]
-
+        if amount_of_teams < 2:
             raise NotImplementedError
 
-        if len(teams) == 4:
-            if double_round:
-                # Amb anda i tornada
-                return [
-                    # Anada
-                    [
-                        (teams[0], teams[1]),
-                        (teams[2], teams[3]),
-                    ],
-                    [
-                        (teams[1], teams[2]),
-                        (teams[0], teams[3]),
-                    ],
-                    [
-                        (teams[2], teams[0]),
-                        (teams[3], teams[1]),
-                    ],
-                    # Tornada
-                    [
-                        (teams[1], teams[0]),
-                        (teams[3], teams[2]),
-                    ],
-                    [
-                        (teams[2], teams[1]),
-                        (teams[3], teams[0]),
-                    ],
-                    [
-                        (teams[0], teams[2]),
-                        (teams[1], teams[3]),
-                    ],
-                ]
+        # Circle method: fix teams_list[0], rotate the rest.
+        # For odd amount_of_teams, add a bye (None) so every team gets a rest round.
+        if amount_of_teams % 2 == 1:
+            teams_list.append(None)
 
-            # Sense anda i tornada
-            return [
-                [
-                    (teams[0], teams[1]),
-                    (teams[2], teams[3]),
-                ],
-                [
-                    (teams[1], teams[2]),
-                    (teams[0], teams[3]),
-                ],
-                [
-                    (teams[2], teams[0]),
-                    (teams[3], teams[1]),
-                ],
+        amount_of_teams_with_bye = len(teams_list)
+        fixed_team = teams_list[0]
+        rotating_teams = list(teams_list[1:])
+
+        rounds = []
+        for round_idx in range(amount_of_teams_with_bye - 1):
+            matches = []
+
+            # Fixed team vs last in rotation
+            opponent = rotating_teams[-1]
+            if fixed_team is not None and opponent is not None:
+                if round_idx % 2 == 0:
+                    matches.append((fixed_team, opponent))
+                else:
+                    matches.append((opponent, fixed_team))
+
+            # Remaining slots: pair from outside in
+            remaining_teams = rotating_teams[:-1]
+            half = len(remaining_teams) // 2
+            for i in range(half):
+                home_team = remaining_teams[i]
+                away_team = remaining_teams[len(remaining_teams) - 1 - i]
+                if home_team is not None and away_team is not None:
+                    if (round_idx + i + 1) % 2 == 0:
+                        matches.append((home_team, away_team))
+                    else:
+                        matches.append((away_team, home_team))
+
+            rounds.append(matches)
+
+            # Rotate: last element moves to front
+            rotating_teams = [rotating_teams[-1]] + rotating_teams[:-1]
+
+        if double_round:
+            return_leg = [
+                [(away, home) for home, away in round_matches]
+                for round_matches in rounds
             ]
+            return rounds + return_leg
 
-        if len(teams) == 5:
-            if double_round:
-                return [
-                    [
-                        (teams[0], teams[1]),
-                        (teams[2], teams[3]),
-                        # teams[4] rests
-                    ],
-                    [
-                        (teams[4], teams[0]),
-                        (teams[1], teams[2]),
-                        # teams[3] rests
-                    ],
-                    [
-                        (teams[4], teams[3]),
-                        (teams[0], teams[2]),
-                        # teams[1] rests
-                    ],
-                    [
-                        (teams[1], teams[4]),
-                        (teams[3], teams[0]),
-                        # teams[2] rests
-                    ],
-                    [
-                        (teams[2], teams[4]),
-                        (teams[3], teams[1]),
-                        # teams[0] rests
-                    ],
-                    # 2nd Round
-                    [
-                        (teams[0], teams[1]),
-                        (teams[2], teams[3]),
-                        # teams[4] rests
-                    ],
-                    [
-                        (teams[4], teams[0]),
-                        (teams[1], teams[2]),
-                        # teams[3] rests
-                    ],
-                    [
-                        (teams[4], teams[3]),
-                        (teams[0], teams[2]),
-                        # teams[1] rests
-                    ],
-                    [
-                        (teams[1], teams[4]),
-                        (teams[3], teams[0]),
-                        # teams[2] rests
-                    ],
-                    [
-                        (teams[2], teams[4]),
-                        (teams[3], teams[1]),
-                        # teams[0] rests
-                    ],
-                ]
-
-            return [
-                [
-                    (teams[0], teams[1]),
-                    (teams[2], teams[3]),
-                    # teams[4] rests
-                ],
-                [
-                    (teams[4], teams[0]),
-                    (teams[1], teams[2]),
-                    # teams[3] rests
-                ],
-                [
-                    (teams[4], teams[3]),
-                    (teams[0], teams[2]),
-                    # teams[1] rests
-                ],
-                [
-                    (teams[1], teams[4]),
-                    (teams[3], teams[0]),
-                    # teams[2] rests
-                ],
-                [
-                    (teams[2], teams[4]),
-                    (teams[3], teams[1]),
-                    # teams[0] rests
-                ],
-            ]
-
-        if len(teams) == 6:
-            return [
-                [
-                    (teams[0], teams[1]),
-                    (teams[2], teams[3]),
-                    (teams[4], teams[5]),
-                ],
-                [
-                    (teams[1], teams[2]),
-                    (teams[5], teams[0]),
-                    (teams[4], teams[3]),
-                ],
-                [
-                    (teams[1], teams[4]),
-                    (teams[5], teams[3]),
-                    (teams[0], teams[2]),
-                ],
-                [
-                    (teams[2], teams[5]),
-                    (teams[0], teams[4]),
-                    (teams[3], teams[1]),
-                ],
-                [
-                    (teams[3], teams[0]),
-                    (teams[1], teams[5]),
-                    (teams[2], teams[4]),
-                ],
-            ]
-
-        if len(teams) == 7:
-            return [
-                [
-                    (teams[0], teams[1]),
-                    (teams[2], teams[3]),
-                    (teams[4], teams[5]),
-                    # teams[6] rests
-                ],
-                [
-                    (teams[6], teams[0]),
-                    (teams[1], teams[2]),
-                    (teams[3], teams[4]),
-                    # teams[5] rests
-                ],
-                [
-                    (teams[5], teams[6]),
-                    (teams[0], teams[2]),
-                    (teams[1], teams[3]),
-                    # teams[4] rests
-                ],
-                [
-                    (teams[5], teams[0]),
-                    (teams[2], teams[4]),
-                    (teams[6], teams[1]),
-                    # teams[3] rests
-                ],
-                [
-                    (teams[3], teams[0]),
-                    (teams[4], teams[6]),
-                    (teams[1], teams[5]),
-                    # teams[2] rests
-                ],
-                [
-                    (teams[0], teams[4]),
-                    (teams[2], teams[6]),
-                    (teams[3], teams[5]),
-                    # teams[1] rests
-                ],
-                [
-                    (teams[4], teams[1]),
-                    (teams[5], teams[2]),
-                    (teams[6], teams[3]),
-                    # teams[0] rests
-                ],
-            ]
-
-        if len(teams) == 8:
-            return [
-                [
-                    (teams[0], teams[1]),
-                    (teams[2], teams[3]),
-                    (teams[4], teams[5]),
-                    (teams[6], teams[7]),
-                ],
-                [
-                    (teams[0], teams[2]),
-                    (teams[1], teams[7]),
-                    (teams[3], teams[5]),
-                    (teams[4], teams[6]),
-                ],
-                [
-                    (teams[0], teams[3]),
-                    (teams[1], teams[6]),
-                    (teams[2], teams[7]),
-                    (teams[4], teams[5]),
-                ],
-                [
-                    (teams[0], teams[4]),
-                    (teams[1], teams[5]),
-                    (teams[2], teams[6]),
-                    (teams[3], teams[7]),
-                ],
-                [
-                    (teams[0], teams[5]),
-                    (teams[1], teams[4]),
-                    (teams[2], teams[7]),
-                    (teams[3], teams[6]),
-                ],
-                [
-                    (teams[0], teams[6]),
-                    (teams[1], teams[3]),
-                    (teams[2], teams[5]),
-                    (teams[4], teams[7]),
-                ],
-                [
-                    (teams[0], teams[7]),
-                    (teams[1], teams[2]),
-                    (teams[3], teams[4]),
-                    (teams[5], teams[6]),
-                ],
-            ]
-
-        if len(teams) == 9:
-            return [
-                [
-                    (teams[0], teams[1]),
-                    (teams[2], teams[3]),
-                    (teams[4], teams[5]),
-                    (teams[6], teams[7]),
-                    # teams[8] rests
-                ],
-                [
-                    (teams[8], teams[0]),
-                    (teams[1], teams[2]),
-                    (teams[3], teams[4]),
-                    (teams[5], teams[6]),
-                    # teams[7] rests
-                ],
-                [
-                    (teams[7], teams[8]),
-                    (teams[0], teams[2]),
-                    (teams[1], teams[3]),
-                    (teams[4], teams[6]),
-                    # teams[5] rests
-                ],
-                [
-                    (teams[5], teams[7]),
-                    (teams[8], teams[1]),
-                    (teams[0], teams[3]),
-                    (teams[2], teams[4]),
-                    # teams[6] rests
-                ],
-                [
-                    (teams[6], teams[5]),
-                    (teams[7], teams[0]),
-                    (teams[8], teams[2]),
-                    (teams[1], teams[4]),
-                    # teams[3] rests
-                ],
-                [
-                    (teams[3], teams[6]),
-                    (teams[5], teams[8]),
-                    (teams[0], teams[4]),
-                    (teams[2], teams[7]),
-                    # teams[1] rests
-                ],
-                [
-                    (teams[1], teams[3]),
-                    (teams[6], teams[0]),
-                    (teams[4], teams[8]),
-                    (teams[2], teams[5]),
-                    # teams[7] rests
-                ],
-                [
-                    (teams[7], teams[1]),
-                    (teams[3], teams[2]),
-                    (teams[0], teams[5]),
-                    (teams[8], teams[6]),
-                    # teams[4] rests
-                ],
-                [
-                    (teams[4], teams[7]),
-                    (teams[1], teams[6]),
-                    (teams[3], teams[5]),
-                    (teams[0], teams[8]),
-                    # teams[2] rests
-                ],
-            ]
-
-        if len(teams) == 10:
-            return [
-                [
-                    (teams[0], teams[1]),
-                    (teams[2], teams[3]),
-                    (teams[4], teams[5]),
-                    (teams[6], teams[7]),
-                    (teams[8], teams[9]),
-                ],
-                [
-                    (teams[0], teams[2]),
-                    (teams[1], teams[9]),
-                    (teams[3], teams[8]),
-                    (teams[4], teams[7]),
-                    (teams[5], teams[6]),
-                ],
-                [
-                    (teams[0], teams[3]),
-                    (teams[1], teams[8]),
-                    (teams[2], teams[9]),
-                    (teams[4], teams[6]),
-                    (teams[5], teams[7]),
-                ],
-                [
-                    (teams[0], teams[4]),
-                    (teams[1], teams[7]),
-                    (teams[2], teams[6]),
-                    (teams[3], teams[5]),
-                    (teams[8], teams[9]),
-                ],
-                [
-                    (teams[0], teams[5]),
-                    (teams[1], teams[6]),
-                    (teams[2], teams[4]),
-                    (teams[3], teams[9]),
-                    (teams[7], teams[8]),
-                ],
-                [
-                    (teams[0], teams[6]),
-                    (teams[1], teams[5]),
-                    (teams[2], teams[7]),
-                    (teams[3], teams[4]),
-                    (teams[8], teams[9]),
-                ],
-                [
-                    (teams[0], teams[7]),
-                    (teams[1], teams[4]),
-                    (teams[2], teams[5]),
-                    (teams[3], teams[6]),
-                    (teams[8], teams[9]),
-                ],
-                [
-                    (teams[0], teams[8]),
-                    (teams[1], teams[3]),
-                    (teams[2], teams[7]),
-                    (teams[4], teams[9]),
-                    (teams[5], teams[6]),
-                ],
-                [
-                    (teams[0], teams[9]),
-                    (teams[1], teams[2]),
-                    (teams[3], teams[7]),
-                    (teams[4], teams[8]),
-                    (teams[5], teams[6]),
-                ],
-            ]
-
-        raise NotImplementedError
+        return rounds

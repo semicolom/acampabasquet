@@ -14,6 +14,10 @@ Then run:
 docker-compose up --build
 ```
 
+## Docker commands
+- Run tests: `docker-compose run web python manage.py test tests`
+- Run management commands: `docker-compose run web python manage.py <command>`
+
 ## Run tests
 
 Run `make tests`. It will do isort-check, lint and django tests.
