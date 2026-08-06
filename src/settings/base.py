@@ -163,4 +163,4 @@ EMAIL_USE_TLS = True
 SERVER_EMAIL = 'no-reply@3x324h.cat'
 
 # Constants
-SITE_NAME = "Acampabàsquet"
+SITE_NAME = "3x3 de la Serra"

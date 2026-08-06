@@ -4,8 +4,8 @@ from django.urls import path, include
 
 from . import views
 
-admin.site.site_header = "Acampabàsquet"
-admin.site.site_title = "Acampabàsquet"
+admin.site.site_header = "3x3 de la Serra"
+admin.site.site_title = "3x3 de la Serra"
 admin.site.index_title = ''
 
 urlpatterns = [
